@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BoostMenuScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\ButtonScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\BoostMenuScript.cs" Line="45" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="C:\Users\R\Desktop\GDD 3100 Final Presentation\Defense Game\Assets\Scripts\BoostMenuScript.cs" line="44" />
+      <Breakpoint file="C:\Users\R\Desktop\GDD 3100 Final Presentation\Defense Game\Assets\Scripts\BoostMenuScript.cs" line="45" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
