@@ -11,6 +11,11 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     public int attack;
     int burnStack;
     bool isSlowed;
+    bool isPoisoned;
+    int poisonCounter;
+    GameObject[] chainArray;
+    public GameObject chainBolt;
+    GameObject boltInstance;
     public GameObject iceAoE;
     public GameObject radiationAoE;
     public float attackDistance;
@@ -25,6 +30,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     static bool damageActive;
     float freezeTimer;
     float slowTimer;
+    float poisonTimer;
     static float damageTimer;    
     public static int damageModifier = 1;
     public AudioClip attackSound;
@@ -43,9 +49,11 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         attack = 1;
         attackDistance = 1.6f;
         timer = 0;
-        
+
+        //chainArray = new GameObject[GlobalDataScript.globalData.weaponList[4].maxSpecialPerkLevel];
         burnStack = 0;
         isSlowed = false;
+        isPoisoned = false;
         //globalData = GameObject.FindGameObjectWithTag("GlobalData").GetComponent<GlobalDataScript>();
 	}
 	
@@ -143,7 +151,38 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             {
                 isSlowed = false;
                 rigidBody.AddForce(new Vector2(speed * .7f, 0));
-                this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                if (isPoisoned)
+                {
+                    this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+                }
+                else
+                {
+                    this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                }
+            }
+        }
+        if(isPoisoned)
+        {
+            poisonTimer = poisonTimer + Time.deltaTime;
+            if(poisonTimer >=1)
+            {
+                poisonTimer = 0;
+                poisonCounter += 1;
+                hp = hp - GlobalDataScript.globalData.weaponList[5].specialPerkLevel;
+                CheckDeath();
+                if(poisonCounter >=5)
+                {
+                    isPoisoned = false;
+                    if (isSlowed)
+                    {
+                        this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                    }
+                    else
+                    {
+                        this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                    }
+                }
+
             }
         }
     }
@@ -159,30 +198,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 burnStack = burnStack + 1;
             }
             Destroy(other.gameObject);
-            if (hp <= 0)
-            {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
-                {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
-
-            }
+            CheckDeath();
         }
         else if (other.tag == "IceProjectile")
         {
@@ -195,29 +211,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         {
             hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
             //Destroy(other.gameObject);
-            if (hp <= 0)
-            {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
-                {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
-            }
+            CheckDeath();
         }
         else if (other.tag == "Dark Projectile")
         {
@@ -227,57 +221,45 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             {
                 Destroy(other.gameObject);
             }
-            if (hp <= 0)
-            {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
-                {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
-            }
+            CheckDeath();
         }
         else if (other.tag == "Tesla Projectile")
         {
             hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
             Destroy(other.gameObject);
-            if (hp <= 0)
+            chainArray = GameObject.FindGameObjectsWithTag("Enemy");
+            GameObject priorEnemy = this.gameObject;
+            GameObject currentEnemy;
+            if (chainArray.Length > 1)
             {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
+                for (int i = 0; i < GlobalDataScript.globalData.weaponList[4].specialPerkLevel; i++)
                 {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+                    int randomAddress = Random.Range(0, chainArray.Length - 1);
+                    currentEnemy = chainArray[randomAddress];
+                    if (currentEnemy == priorEnemy)
+                    {
+                        if (randomAddress >= chainArray.Length - 1)
+                        {
+                            currentEnemy = chainArray[randomAddress - 1];
+                        }
+                        else
+                        {
+                            currentEnemy = chainArray[randomAddress + 1];
+                        }
+                    }
+                    currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                    Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
+                    direction.z = 0;
+                    boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction/2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                    
+                    Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                    boltInstance.transform.Rotate(targetRotation);
+                    boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
+                    priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
+                    priorEnemy = currentEnemy;
                 }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
             }
+            CheckDeath();
         }
         else if (other.tag == "Radiation Projectile")
         {
@@ -297,57 +279,20 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
             }
             hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
-            if (hp <= 0)
-            {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
-                {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
-            }
+            CheckDeath();
         }
         else if (other.tag == "RadiationAoE")
         {
             Debug.Log("Radiation collided.");
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);            
-            if (hp <= 0)
+            poisonCounter = 0;
+            if (!isPoisoned)
             {
-                int gold = Random.Range(25, 100);
-                GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
-                GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
-                coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-                int random = Random.Range(0, 100);
-                if (random <= 3)
-                {
-                    Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 7)
-                {
-                    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                else if (random <= 11)
-                {
-                    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-                }
-                Destroy(this.gameObject);
+                isPoisoned = true;
+                poisonTimer = 0;
+                this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
             }
+            hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            CheckDeath();
         }
         else if (other.tag == "ChronoWave")
         {
@@ -378,6 +323,34 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             }
         }
     }
+
+    public void CheckDeath()
+    {
+        if (hp <= 0)
+        {
+            int gold = Random.Range(25, 100);
+            GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
+            GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
+            coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+            coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
+            GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
+            int random = Random.Range(0, 100);
+            if (random <= 3)
+            {
+                Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+            }
+            else if (random <= 7)
+            {
+                Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+            }
+            else if (random <= 11)
+            {
+                Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+            }
+            Destroy(this.gameObject);
+        }
+    }
+
     void UseDestroyPowerup()
     {
         Destroy(this.gameObject);

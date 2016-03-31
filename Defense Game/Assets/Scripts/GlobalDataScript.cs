@@ -96,7 +96,7 @@ public class GlobalDataScript : MonoBehaviour
         weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, 7, 15, 7, 5, 7, 5f, 7, "pierce", 7, 70f));
         weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, 7, 10, 7, 2, 7, 2.5f, 7, "chain lightning", 7, 70f));
         weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, 7, 5, 7, 7, 7, .5f, 7, "poison", 7, 50f));
-        currentPrimary = weaponList[2];
+        currentPrimary = weaponList[0];
         currentPrimary.equipped = 0;
         currentSecondary = weaponList[1];
         currentSecondary.equipped = 1;
@@ -154,6 +154,21 @@ public class GlobalDataScript : MonoBehaviour
         {
             Debug.Log("Tutorial skipped.");
             globalData.tutorialState = 3;
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            currentPrimary = weaponList[0];
+            currentSecondary = weaponList[1];
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            currentPrimary = weaponList[2];
+            currentSecondary = weaponList[3];
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            currentPrimary = weaponList[4];
+            currentSecondary = weaponList[5];
         }
         //Debug.Log(questList[0].name);
         //Debug.Log(questList);
@@ -419,7 +434,7 @@ public class Weapon
         chargePerShotLevel = 0;
         maxChargePerShotLevel = maxChargePerShot;
         specialPerk = perk;
-        specialPerkLevel = 3;
+        specialPerkLevel = 0;
         maxSpecialPerkLevel = maxPerk;
         speed = projectileSpeed;
         rotation = rotationOffset;

@@ -50,7 +50,7 @@ public class GunUpgradeScript : MonoBehaviour
         damageText.GetComponent<UnityEngine.UI.Text>().text = "Damage: " + (weapon.damageLevel + 1);
         chargeRateText.GetComponent<UnityEngine.UI.Text>().text = "Charge Rate: " + (weapon.chargeRateLevel + 1);
         chargeCapacityText.GetComponent<UnityEngine.UI.Text>().text = "Charge Capacity: " + (weapon.chargePerShotLevel + 1);
-        perkText.GetComponent<UnityEngine.UI.Text>().text = "Perk Level: " + (weapon.specialPerkLevel + 1);
+        perkText.GetComponent<UnityEngine.UI.Text>().text = "Perk Level: " + (weapon.specialPerkLevel);
 
         //Displays upgrade costs and displays MAX if max upgrade level has been reached.
         if (weapon.fireRateLevel != weapon.maxFireRateLevel)

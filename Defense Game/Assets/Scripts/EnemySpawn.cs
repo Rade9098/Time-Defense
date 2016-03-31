@@ -46,7 +46,12 @@ public class EnemySpawn : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            wave = wave + 10;
+        }
         if (GlobalDataScript.globalData.tutorialState == 3)
         {
             levelTimer = levelTimer + Time.deltaTime;
