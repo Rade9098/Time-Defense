@@ -17,7 +17,10 @@ public class GlobalDataScript : MonoBehaviour
     public int gold;
     public GameObject FireProjectile;
     public GameObject IceProjectile;
-    public GameObject RadiantProjectile;
+    public GameObject LightProjectile;
+    public GameObject DarkProjectile;
+    public GameObject TeslaProjectile;
+    public GameObject RadiationProjectile;
     public Weapon currentPrimary;
     public Weapon currentSecondary;
     public int tutorialState;
@@ -35,6 +38,10 @@ public class GlobalDataScript : MonoBehaviour
     public int chronoWaveAbilityLevel;
     public AudioClip fireWeaponSound;
     public AudioClip iceWeaponSound;
+    public AudioClip lightWeaponSound;
+    public AudioClip darkWeaponSound;
+    public AudioClip teslaWeaponSound;
+    public AudioClip radiationWeaponSound;
     public EventSystem eventHandler;
     void Awake()
     {
@@ -83,9 +90,13 @@ public class GlobalDataScript : MonoBehaviour
         Debug.Log(questList[0].name);
         weaponList = new List<Weapon>(3);
         //weaponList.Add(fireWeapon);
-        weaponList.Add(new Weapon("Plasma shot", true, "FireProjectile", .09f, 7, 5, 7, 10, 7, .5f, 7, "basic", 1));
-        weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .35f, 7, 15, 7, 5, 7, 2.5f, 7, "pierce", 7));
-        currentPrimary = weaponList[0];
+        weaponList.Add(new Weapon("Plasma blast", true, "FireProjectile", .09f, 7, 5, 7, 10, 7, .5f, 7, "burn stack", 7, 150f, 45));
+        weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .7f, 7, 10, 7, 5, 7, 2.5f, 7, "freeze", 7, 70f));
+        weaponList.Add(new Weapon("Light beam", true, "LightProjectile", 3, 7, 50, 7, 2, 7, 80, 7, "flood of light", 7, 1000f));
+        weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, 7, 15, 7, 5, 7, 5f, 7, "pierce", 7, 70f));
+        weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, 7, 10, 7, 2, 7, 2.5f, 7, "chain lightning", 7, 70f));
+        weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, 7, 5, 7, 7, 7, .5f, 7, "poison", 7, 50f));
+        currentPrimary = weaponList[2];
         currentPrimary.equipped = 0;
         currentSecondary = weaponList[1];
         currentSecondary.equipped = 1;
@@ -220,6 +231,22 @@ public class GlobalDataScript : MonoBehaviour
         {
             return IceProjectile;
         }
+        else if (projectileType == "LightProjectile")
+        {
+            return LightProjectile;
+        }
+        else if (projectileType == "DarkProjectile")
+        {
+            return DarkProjectile;
+        }
+        else if (projectileType == "TeslaProjectile")
+        {
+            return TeslaProjectile;
+        }
+        else if (projectileType == "RadiationProjectile")
+        {
+            return RadiationProjectile;
+        }
         else
         {
             return null;
@@ -235,6 +262,22 @@ public class GlobalDataScript : MonoBehaviour
         else if (projectileType == "IceProjectile")
         {
             return iceWeaponSound;
+        }
+        else if (projectileType == "LightProjectile")
+        {
+            return lightWeaponSound;
+        }
+        else if (projectileType == "DarkProjectile")
+        {
+            return darkWeaponSound;
+        }
+        else if (projectileType == "TeslaProjectile")
+        {
+            return teslaWeaponSound;
+        }
+        else if (projectileType == "RadiationProjectile")
+        {
+            return radiationWeaponSound;
         }
         else
         {
@@ -310,6 +353,7 @@ public class GlobalDataScript : MonoBehaviour
 public class Weapon
 {
     public string name;
+    public int rotation;
     public bool unlocked;
     public int equipped = -1;
     public string projectile;
@@ -333,10 +377,27 @@ public class Weapon
     public int maxChargePerShotLevel;
     public int maxSpecialPerkLevel;
     public string weaponSoundType;
+    public float speed;
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="weaponName"> Name of the weapon. </param>
+    /// <param name="startUnlocked"> Indicates whether the weapon must be purchased before being usable. </param>
+    /// <param name="projectileType"> The name of the projectile this weapon uses. </param>
+    /// <param name="fireRate"> The initial time between shots fired. </param>
+    /// <param name="maxFireRate">The maximum fire rate level.</param>
+    /// <param name="damage">The initial damage dealt by the weapon.</param>
+    /// <param name="maxDamage">The maximum damage level.</param>
+    /// <param name="chargeRate"> The initial amount of charge restored per tick. </param>
+    /// <param name="maxChargeRate">The maximum charge rate level.</param>
+    /// <param name="chargePerShot">The initial amount of charge consumed per shot.</param>
+    /// <param name="maxChargePerShot">The maximum charge consumption level.</param>
+    /// <param name="perk">The special ability of the weapon.</param>
+    /// <param name="maxPerk">The maximum level of the special ability.</param>
+    /// <param name="speed">The speed of the weapon's projectile.</param>
     public Weapon(string weaponName, bool startUnlocked, string projectileType, float fireRate, int maxFireRate, int damage, int maxDamage,
-        float chargeRate, int maxChargeRate, float chargePerShot, int maxChargePerShot, string perk, int maxPerk)
+        float chargeRate, int maxChargeRate, float chargePerShot, int maxChargePerShot, string perk, int maxPerk, float projectileSpeed, int rotationOffset = 90)
     {
         name = weaponName;
         unlocked = startUnlocked;
@@ -358,8 +419,10 @@ public class Weapon
         chargePerShotLevel = 0;
         maxChargePerShotLevel = maxChargePerShot;
         specialPerk = perk;
-        specialPerkLevel = 0;
+        specialPerkLevel = 3;
         maxSpecialPerkLevel = maxPerk;
+        speed = projectileSpeed;
+        rotation = rotationOffset;
     }
 
     public void Upgrade(string stat)

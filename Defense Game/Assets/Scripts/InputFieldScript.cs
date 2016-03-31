@@ -104,11 +104,15 @@ public class InputFieldScript : MonoBehaviour
                         primaryCharge = primaryCharge - primaryWeapon.currentChargePerShot;
                         bulletInstance = Instantiate(GlobalDataScript.globalData.GetProjectile(primaryWeapon.projectile), transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                         SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(primaryWeapon.projectile), .5f);
-
+                        if(primaryWeapon.specialPerk == "flood of light")
+                        {
+                            bulletInstance.transform.localScale = new Vector3((bulletInstance.transform.localScale.x + (bulletInstance.transform.localScale.x * .2f * primaryWeapon.specialPerkLevel)), bulletInstance.transform.localScale.y, bulletInstance.transform.localScale.z);
+                            //bulletInstance.GetComponent<BoxCollider2D>().size.Set(bulletInstance.GetComponent<BoxCollider2D>().size.x + bulletInstance.GetComponent<BoxCollider2D>().size.x * .2f * primaryWeapon.specialPerkLevel, bulletInstance.GetComponent<BoxCollider2D>().size.y);
+                        }
 
                         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         Vector3 direction = targetPosition - bulletInstance.transform.position;
-                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg +45);
+                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg +GlobalDataScript.globalData.currentPrimary.rotation);
 
                         //Quaternion.Euler(direction);
                         //direction.Normalize();
@@ -122,8 +126,8 @@ public class InputFieldScript : MonoBehaviour
                         direction.z = 0;
                         direction = direction.normalized;
                         //Debug.Log(pineapple);
-                        direction.x = direction.x * speed;
-                        direction.y = direction.y * speed;
+                        direction.x = direction.x * primaryWeapon.speed;
+                        direction.y = direction.y * primaryWeapon.speed;
                         //Debug.Log(pineapple);
                         bulletBody.AddForce(direction);
                         //bulletInstance.velocity = new Vector2(speed, 0);
@@ -133,7 +137,10 @@ public class InputFieldScript : MonoBehaviour
             }
             else if (chargeTimer >= 1 && primaryCharge < 100)
             {
-                chargeTimer = 0;
+                if (secondaryCharge >= 100 || Input.GetMouseButton(1))
+                {
+                    chargeTimer = 0;
+                }
                 primaryCharge = primaryCharge + primaryWeapon.currentChargeRate;
                 if (primaryCharge > 100)
                 {
@@ -151,12 +158,12 @@ public class InputFieldScript : MonoBehaviour
                         secondaryCharge = secondaryCharge - secondaryWeapon.currentChargePerShot;
                         timer = 0;
                         bulletInstance = Instantiate(GlobalDataScript.globalData.GetProjectile(secondaryWeapon.projectile), transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                        SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(secondaryWeapon.projectile), 1);
+                        SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(secondaryWeapon.projectile), .5f);
 
 
                         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         Vector3 direction = targetPosition - bulletInstance.transform.position;
-                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90);
+                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + GlobalDataScript.globalData.currentSecondary.rotation);
 
                         //Quaternion.Euler(direction);
                         //direction.Normalize();
@@ -171,8 +178,8 @@ public class InputFieldScript : MonoBehaviour
                         direction.z = 0;
                         direction = direction.normalized;
                         //Debug.Log(direction);
-                        direction.x = direction.x * iceSpeed;
-                        direction.y = direction.y * iceSpeed;
+                        direction.x = direction.x * secondaryWeapon.speed;
+                        direction.y = direction.y * secondaryWeapon.speed;
                         //Debug.Log(direction);
                         bulletBody.AddForce(direction);
                         //bulletInstance.velocity = new Vector2(speed, 0);
