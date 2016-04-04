@@ -44,7 +44,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         rigidBody.AddForce(new Vector2(speed, 0));
         
         //levelCompleteScreen = GameObject.FindGameObjectWithTag("LevelCompleteScreen");        
-        hp = 30;
+        hp = 300;
         threatValue = 1;
         attack = 1;
         attackDistance = 1.6f;
@@ -150,7 +150,14 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             if (slowTimer >= GlobalDataScript.globalData.weaponList[1].specialPerkLevel)
             {
                 isSlowed = false;
-                rigidBody.AddForce(new Vector2(speed * .7f, 0));
+                if (GlobalDataScript.globalData.weaponList[1].equipped < 2)
+                {
+                    rigidBody.AddForce(new Vector2(speed * .7f, 0));
+                }
+                else
+                {
+                    rigidBody.AddForce(new Vector2(speed * .5f, 0));
+                }
                 if (isPoisoned)
                 {
                     this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
@@ -168,7 +175,14 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             {
                 poisonTimer = 0;
                 poisonCounter += 1;
-                hp = hp - GlobalDataScript.globalData.weaponList[5].specialPerkLevel;
+                if (GlobalDataScript.globalData.weaponList[5].equipped < 2)
+                {
+                    hp = hp - GlobalDataScript.globalData.weaponList[5].specialPerkLevel * 2;
+                }
+                else
+                {
+                    hp = hp - GlobalDataScript.globalData.weaponList[5].specialPerkLevel * 2/3;
+                }
                 CheckDeath();
                 if(poisonCounter >=5)
                 {
@@ -191,8 +205,14 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         //Debug.Log(other.tag);
         if (other.tag == "FireProjectile")
         {
-
-            hp = (int)(hp - (GlobalDataScript.globalData.weaponList[0].currentDamage + burnStack * GlobalDataScript.globalData.weaponList[0].currentDamage/2) * damageModifier * GlobalDataScript.globalData.damageBonus);
+            if(GlobalDataScript.globalData.weaponList[0].equipped<2)
+            {
+                hp = (int)(hp - (GlobalDataScript.globalData.weaponList[0].currentDamage + burnStack * GlobalDataScript.globalData.weaponList[0].currentDamage / 2) * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
+            else
+            {
+                hp = (int)(hp - (GlobalDataScript.globalData.weaponList[0].currentDamage/3 + burnStack * GlobalDataScript.globalData.weaponList[0].currentDamage / 6) * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
             if (burnStack < GlobalDataScript.globalData.weaponList[0].specialPerkLevel)
             {
                 burnStack = burnStack + 1;
@@ -209,56 +229,118 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         }
         else if (other.tag == "Light Projectile")
         {
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            if (GlobalDataScript.globalData.weaponList[2].equipped < 2)
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
+            else
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
+            
             //Destroy(other.gameObject);
             CheckDeath();
         }
         else if (other.tag == "Dark Projectile")
         {
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[3].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
-            other.GetComponent<DarkProjectileScript>().collisionCounter = other.GetComponent<DarkProjectileScript>().collisionCounter + 1;
-            if (other.GetComponent<DarkProjectileScript>().collisionCounter >= GlobalDataScript.globalData.weaponList[3].specialPerkLevel + 1)
+            if (GlobalDataScript.globalData.weaponList[3].equipped < 2)
             {
-                Destroy(other.gameObject);
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[3].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                other.GetComponent<DarkProjectileScript>().collisionCounter = other.GetComponent<DarkProjectileScript>().collisionCounter + 1;
+                if (other.GetComponent<DarkProjectileScript>().collisionCounter >= GlobalDataScript.globalData.weaponList[3].specialPerkLevel + 1)
+                {
+                    Destroy(other.gameObject);
+                }
             }
+            else
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[3].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+                other.GetComponent<DarkProjectileScript>().collisionCounter = other.GetComponent<DarkProjectileScript>().collisionCounter + 1;
+                if (other.GetComponent<DarkProjectileScript>().collisionCounter >= GlobalDataScript.globalData.weaponList[3].specialPerkLevel - 1)
+                {
+                    Destroy(other.gameObject);
+                }
+            }
+            
             CheckDeath();
         }
         else if (other.tag == "Tesla Projectile")
         {
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
-            Destroy(other.gameObject);
-            chainArray = GameObject.FindGameObjectsWithTag("Enemy");
-            GameObject priorEnemy = this.gameObject;
-            GameObject currentEnemy;
-            if (chainArray.Length > 1)
+            if (GlobalDataScript.globalData.weaponList[4].equipped < 2)
             {
-                for (int i = 0; i < GlobalDataScript.globalData.weaponList[4].specialPerkLevel; i++)
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                Destroy(other.gameObject);
+                chainArray = GameObject.FindGameObjectsWithTag("Enemy");
+                GameObject priorEnemy = this.gameObject;
+                GameObject currentEnemy;
+                if (chainArray.Length > 1)
                 {
-                    int randomAddress = Random.Range(0, chainArray.Length - 1);
-                    currentEnemy = chainArray[randomAddress];
-                    if (currentEnemy == priorEnemy)
+                    for (int i = 0; i < GlobalDataScript.globalData.weaponList[4].specialPerkLevel; i++)
                     {
-                        if (randomAddress >= chainArray.Length - 1)
+                        int randomAddress = Random.Range(0, chainArray.Length - 1);
+                        currentEnemy = chainArray[randomAddress];
+                        if (currentEnemy == priorEnemy)
                         {
-                            currentEnemy = chainArray[randomAddress - 1];
+                            if (randomAddress >= chainArray.Length - 1)
+                            {
+                                currentEnemy = chainArray[randomAddress - 1];
+                            }
+                            else
+                            {
+                                currentEnemy = chainArray[randomAddress + 1];
+                            }
                         }
-                        else
-                        {
-                            currentEnemy = chainArray[randomAddress + 1];
-                        }
+                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                        Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
+                        direction.z = 0;
+                        boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction / 2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+
+                        Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                        boltInstance.transform.Rotate(targetRotation);
+                        boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
+                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
+                        priorEnemy = currentEnemy;
                     }
-                    currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
-                    Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
-                    direction.z = 0;
-                    boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction/2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                    
-                    Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                    boltInstance.transform.Rotate(targetRotation);
-                    boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
-                    priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
-                    priorEnemy = currentEnemy;
                 }
             }
+            else
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+                Destroy(other.gameObject);
+                chainArray = GameObject.FindGameObjectsWithTag("Enemy");
+                GameObject priorEnemy = this.gameObject;
+                GameObject currentEnemy;
+                if (chainArray.Length > 1)
+                {
+                    for (int i = 0; i < GlobalDataScript.globalData.weaponList[4].specialPerkLevel-2; i++)
+                    {
+                        int randomAddress = Random.Range(0, chainArray.Length - 1);
+                        currentEnemy = chainArray[randomAddress];
+                        if (currentEnemy == priorEnemy)
+                        {
+                            if (randomAddress >= chainArray.Length - 1)
+                            {
+                                currentEnemy = chainArray[randomAddress - 1];
+                            }
+                            else
+                            {
+                                currentEnemy = chainArray[randomAddress + 1];
+                            }
+                        }
+                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+                        Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
+                        direction.z = 0;
+                        boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction / 2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+
+                        Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                        boltInstance.transform.Rotate(targetRotation);
+                        boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
+                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
+                        priorEnemy = currentEnemy;
+                    }
+                }
+            }
+            
             CheckDeath();
         }
         else if (other.tag == "Radiation Projectile")
@@ -270,20 +352,33 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         }
         else if (other.tag == "IceAoE")
         {
-            Debug.Log("Ice collided.");
+            
             slowTimer = 0;
-            if(!isSlowed)
+            
+            if (GlobalDataScript.globalData.weaponList[1].equipped < 2)
             {
-                isSlowed = true;
-                rigidBody.AddForce(new Vector2(-speed*.7f, 0));
-                this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (!isSlowed)
+                {
+                    isSlowed = true;
+                    rigidBody.AddForce(new Vector2(-speed * .7f, 0));
+                    this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                }
             }
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            else
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (!isSlowed)
+                {
+                    isSlowed = true;
+                    rigidBody.AddForce(new Vector2(-speed * .5f, 0));
+                    this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
+                }
+            }
             CheckDeath();
         }
         else if (other.tag == "RadiationAoE")
-        {
-            Debug.Log("Radiation collided.");
+        {            
             poisonCounter = 0;
             if (!isPoisoned)
             {
@@ -291,7 +386,14 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 poisonTimer = 0;
                 this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
             }
-            hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            if (GlobalDataScript.globalData.weaponList[5].equipped < 2)
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
+            else
+            {
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+            }
             CheckDeath();
         }
         else if (other.tag == "ChronoWave")

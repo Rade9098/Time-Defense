@@ -19,6 +19,7 @@ public class GunUpgradeScript : MonoBehaviour
     public GameObject chargeRateButton;
     public GameObject chargeCapacityButton;
     public GameObject perkButton;
+    public GameObject equipText;
     public int weaponType;
 
 	// Use this for initialization
@@ -43,9 +44,53 @@ public class GunUpgradeScript : MonoBehaviour
         UpdateTexts();
     }
 
+    public void Equip(int slot)
+    {
+        foreach(Weapon weapon in GlobalDataScript.globalData.weaponList)
+        {
+            if(weapon.equipped == slot)
+            {
+                weapon.equipped = GlobalDataScript.globalData.weaponList[weaponType].equipped;
+                GlobalDataScript.globalData.equippedWeapons[weapon.equipped] = weapon;
+            }
+        }
+        GlobalDataScript.globalData.weaponList[weaponType].equipped = slot;        
+        GlobalDataScript.globalData.equippedWeapons[slot] = GlobalDataScript.globalData.weaponList[weaponType];
+        foreach( GameObject gunPanel in GameObject.FindGameObjectsWithTag("GunPanel"))
+        {
+            gunPanel.GetComponent<GunUpgradeScript>().UpdateTexts();
+        }
+        
+                
+    }
+
     void UpdateTexts()
     {
         Debug.Log("Updating Text");
+        switch(weapon.equipped)
+        {
+            case 0:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "P";
+                break;
+            case 1:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "S";
+                break;
+            case 2:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "T1";
+                break;
+            case 3:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "T2";
+                break;
+            case 4:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "T3";
+                break;
+            case 5:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "T4";
+                break;
+            default:
+                equipText.GetComponent<UnityEngine.UI.Text>().text = "Error";
+                break;
+        }
         fireRateText.GetComponent<UnityEngine.UI.Text>().text = "Fire Rate: " + (weapon.fireRateLevel + 1);
         damageText.GetComponent<UnityEngine.UI.Text>().text = "Damage: " + (weapon.damageLevel + 1);
         chargeRateText.GetComponent<UnityEngine.UI.Text>().text = "Charge Rate: " + (weapon.chargeRateLevel + 1);
@@ -53,7 +98,7 @@ public class GunUpgradeScript : MonoBehaviour
         perkText.GetComponent<UnityEngine.UI.Text>().text = "Perk Level: " + (weapon.specialPerkLevel);
 
         //Displays upgrade costs and displays MAX if max upgrade level has been reached.
-        if (weapon.fireRateLevel != weapon.maxFireRateLevel)
+        if (weapon.fireRateLevel != weapon.maxLevel)
         {
             fireRateCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(weapon.fireRateLevel + 2, 3) * 1000);
         }
@@ -61,7 +106,7 @@ public class GunUpgradeScript : MonoBehaviour
         {
             fireRateCost.GetComponent<UnityEngine.UI.Text>().text = "MAX";
         }
-        if (weapon.damageLevel != weapon.maxDamageLevel)
+        if (weapon.damageLevel != weapon.maxLevel)
         {
             damageCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(weapon.damageLevel + 2, 3) * 1000);
         }
@@ -69,7 +114,7 @@ public class GunUpgradeScript : MonoBehaviour
         {
             damageCost.GetComponent<UnityEngine.UI.Text>().text = "MAX";
         }
-        if (weapon.chargeRateLevel != weapon.maxChargeRateLevel)
+        if (weapon.chargeRateLevel != weapon.maxLevel)
         {
             chargeRateCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(weapon.chargeRateLevel + 2, 3) * 1000);
         }
@@ -77,7 +122,7 @@ public class GunUpgradeScript : MonoBehaviour
         {
             chargeRateCost.GetComponent<UnityEngine.UI.Text>().text = "MAX";
         }
-        if (weapon.chargePerShotLevel != weapon.maxChargePerShotLevel)
+        if (weapon.chargePerShotLevel != weapon.maxLevel)
         {
             chargeCapacityCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(weapon.chargePerShotLevel + 2, 3) * 1000);
         }
@@ -85,7 +130,7 @@ public class GunUpgradeScript : MonoBehaviour
         {
             chargeCapacityCost.GetComponent<UnityEngine.UI.Text>().text = "MAX";
         }
-        if (weapon.specialPerkLevel != weapon.maxSpecialPerkLevel)
+        if (weapon.specialPerkLevel != weapon.maxLevel)
         {
             perkCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(weapon.specialPerkLevel + 2, 3) * 1000);
         }

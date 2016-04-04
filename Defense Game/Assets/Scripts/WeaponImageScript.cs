@@ -9,11 +9,11 @@ public class WeaponImageScript : MonoBehaviour
     {
         if (isPrimary)
         {
-            this.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = GlobalDataScript.globalData.GetProjectile(GlobalDataScript.globalData.currentPrimary.projectile).GetComponent<SpriteRenderer>().sprite;
+            this.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = GlobalDataScript.globalData.GetProjectile(GlobalDataScript.globalData.equippedWeapons[0].projectile).GetComponent<SpriteRenderer>().sprite;
         }
         else
         {
-            this.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = GlobalDataScript.globalData.GetProjectile(GlobalDataScript.globalData.currentSecondary.projectile).GetComponent<SpriteRenderer>().sprite;
+            this.gameObject.GetComponent<UnityEngine.UI.Image>().sprite = GlobalDataScript.globalData.GetProjectile(GlobalDataScript.globalData.equippedWeapons[1].projectile).GetComponent<SpriteRenderer>().sprite;
         }
 	}
 	

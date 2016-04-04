@@ -21,8 +21,7 @@ public class GlobalDataScript : MonoBehaviour
     public GameObject DarkProjectile;
     public GameObject TeslaProjectile;
     public GameObject RadiationProjectile;
-    public Weapon currentPrimary;
-    public Weapon currentSecondary;
+    public List<Weapon> equippedWeapons;
     public int tutorialState;
     public List<Powerup> powerups;
     public int levelGoldTracker;
@@ -36,6 +35,7 @@ public class GlobalDataScript : MonoBehaviour
     public int regenAbilityLevel;
     public int armorAbilityLevel;
     public int chronoWaveAbilityLevel;
+    public int turretLevel;
     public AudioClip fireWeaponSound;
     public AudioClip iceWeaponSound;
     public AudioClip lightWeaponSound;
@@ -75,6 +75,7 @@ public class GlobalDataScript : MonoBehaviour
         regenAbilityLevel=1;
         armorAbilityLevel=1;
         chronoWaveAbilityLevel=1;
+        turretLevel = 4;
         powerups = new List<Powerup>();
         questList = new List<Quest>(10);
         questList.Add(new Quest("Quest 1", 3, true, "Beat levels 1, 2, and 3.", new string[3] { "Beat level 1.", "Beat level 2.", "Beat level 3." }));
@@ -90,16 +91,19 @@ public class GlobalDataScript : MonoBehaviour
         Debug.Log(questList[0].name);
         weaponList = new List<Weapon>(3);
         //weaponList.Add(fireWeapon);
-        weaponList.Add(new Weapon("Plasma blast", true, "FireProjectile", .09f, 7, 5, 7, 10, 7, .5f, 7, "burn stack", 7, 150f, 45));
-        weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .7f, 7, 10, 7, 5, 7, 2.5f, 7, "freeze", 7, 70f));
-        weaponList.Add(new Weapon("Light beam", true, "LightProjectile", 3, 7, 50, 7, 2, 7, 80, 7, "flood of light", 7, 1000f));
-        weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, 7, 15, 7, 5, 7, 5f, 7, "pierce", 7, 70f));
-        weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, 7, 10, 7, 2, 7, 2.5f, 7, "chain lightning", 7, 70f));
-        weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, 7, 5, 7, 7, 7, .5f, 7, "poison", 7, 50f));
-        currentPrimary = weaponList[0];
-        currentPrimary.equipped = 0;
-        currentSecondary = weaponList[1];
-        currentSecondary.equipped = 1;
+        weaponList.Add(new Weapon("Plasma blast", true, "FireProjectile", .09f, .01f, 5, 2, 10, 1.5f, .5f, .05f, "burn stack", 150f, 45));
+        weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .7f, .05f, 10, 3, 5, 1, 2.5f, .2f, "freeze", 100f));
+        weaponList.Add(new Weapon("Light beam", true, "LightProjectile", 3, .3f, 50, 20, 2, 1f, 80, 7, "flood of light", 000f));
+        weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, .02f, 15, 5, 5, 1, 5f, .3f, "pierce", 100f));
+        weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, .012f, 10, 3, 2, .5f, 2.5f, .2f, "chain lightning", 100f));
+        weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, .012f, 5, 2, 7, 1.2f, .5f, .05f, "poison", 70f));
+        equippedWeapons = new List<Weapon>(weaponList);
+        equippedWeapons[0].equipped = 0;
+        equippedWeapons[1].equipped = 1;
+        equippedWeapons[2].equipped = 2;
+        equippedWeapons[3].equipped = 3;
+        equippedWeapons[4].equipped = 4;
+        equippedWeapons[5].equipped = 5;
         completedLevels = new bool[10];
         for (int i = 0; i < completedLevels.Length; i++)
         {
@@ -155,21 +159,6 @@ public class GlobalDataScript : MonoBehaviour
             Debug.Log("Tutorial skipped.");
             globalData.tutorialState = 3;
         }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            currentPrimary = weaponList[0];
-            currentSecondary = weaponList[1];
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            currentPrimary = weaponList[2];
-            currentSecondary = weaponList[3];
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            currentPrimary = weaponList[4];
-            currentSecondary = weaponList[5];
-        }
         //Debug.Log(questList[0].name);
         //Debug.Log(questList);
     }
@@ -179,8 +168,7 @@ public class GlobalDataScript : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/playerStats.dat");
         SaveData data = new SaveData();
         data.completedLevels = completedLevels;
-        data.currentPrimary = currentPrimary;
-        data.currentSecondary = currentSecondary;
+        data.equippedWeapons = equippedWeapons;
         data.questList = questList;
         data.weaponList = weaponList;
         data.hp = hp;
@@ -217,8 +205,7 @@ public class GlobalDataScript : MonoBehaviour
             SaveData data = (SaveData)bf.Deserialize(file);
             file.Close();
             completedLevels = data.completedLevels;
-            currentPrimary = data.currentPrimary;
-            currentSecondary = data.currentSecondary;
+            equippedWeapons = data.equippedWeapons;
             questList = data.questList;
             weaponList = data.weaponList;
             hp = data.hp;
@@ -386,11 +373,11 @@ public class Weapon
     public int chargeRateLevel;
     public int chargePerShotLevel;
     public int specialPerkLevel;
-    public int maxFireRateLevel;
-    public int maxDamageLevel;
-    public int maxChargeRateLevel;
-    public int maxChargePerShotLevel;
-    public int maxSpecialPerkLevel;
+    public float deltaFireRate;
+    public int deltaDamage;
+    public float deltaChargeRate;
+    public float deltaChargePerShot;
+    public int maxLevel;
     public string weaponSoundType;
     public float speed;
 
@@ -411,31 +398,31 @@ public class Weapon
     /// <param name="perk">The special ability of the weapon.</param>
     /// <param name="maxPerk">The maximum level of the special ability.</param>
     /// <param name="speed">The speed of the weapon's projectile.</param>
-    public Weapon(string weaponName, bool startUnlocked, string projectileType, float fireRate, int maxFireRate, int damage, int maxDamage,
-        float chargeRate, int maxChargeRate, float chargePerShot, int maxChargePerShot, string perk, int maxPerk, float projectileSpeed, int rotationOffset = 90)
+    public Weapon(string weaponName, bool startUnlocked, string projectileType, float fireRate, float fireRateIncrement, int damage, int damageIncrement,
+        float chargeRate, float chargeRateIncrement, float chargePerShot, float chargePerShotIncrement, string perk, float projectileSpeed, int rotationOffset = 90)
     {
         name = weaponName;
+        maxLevel = 7;
         unlocked = startUnlocked;
         projectile = projectileType;
         baseFireRate = fireRate;
         currentFireRate = baseFireRate;
         fireRateLevel = 0;
-        maxFireRateLevel = maxFireRate;
+        deltaFireRate = fireRateIncrement;        
         baseDamage = damage;
         currentDamage = baseDamage;
         damageLevel = 0;
-        maxDamageLevel = maxDamage;
+        deltaDamage = damageIncrement;
         baseChargeRate = chargeRate;
         currentChargeRate = baseChargeRate;
         chargeRateLevel = 0;
-        maxChargeRateLevel = maxChargeRate;
+        deltaChargeRate = chargeRateIncrement;
         baseChargePerShot = chargePerShot;
         currentChargePerShot = baseChargePerShot;
         chargePerShotLevel = 0;
-        maxChargePerShotLevel = maxChargePerShot;
+        deltaChargePerShot = chargePerShotIncrement;
         specialPerk = perk;
         specialPerkLevel = 0;
-        maxSpecialPerkLevel = maxPerk;
         speed = projectileSpeed;
         rotation = rotationOffset;
     }
@@ -445,43 +432,43 @@ public class Weapon
         switch (stat)
         {
             case "fireRate":
-                if(fireRateLevel<maxFireRateLevel)
+                if(fireRateLevel<maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(fireRateLevel + 2, 3) * 1000);
                     fireRateLevel = fireRateLevel+1;
-                    currentFireRate = baseFireRate - fireRateLevel*.01f;
+                    currentFireRate = baseFireRate - fireRateLevel*deltaFireRate;
                     
                 }
                 break;
             case "damage":
-                if (damageLevel < maxDamageLevel)
+                if (damageLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(damageLevel + 2, 3) * 1000);
                     damageLevel = damageLevel+ 1;
-                    currentDamage = baseDamage + damageLevel*2;
+                    currentDamage = baseDamage + damageLevel*deltaDamage;
                 }
                 break;
             case "chargeRate":
-                if (chargeRateLevel < maxChargeRateLevel)
+                if (chargeRateLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(chargeRateLevel + 2, 3) * 1000);
                     chargeRateLevel = chargeRateLevel + 1;
-                    currentChargeRate = baseChargeRate + chargeRateLevel * 1.5f;
+                    currentChargeRate = baseChargeRate + chargeRateLevel * deltaChargeRate;
                 }
                 break;
             case "chargePerShot":
-                if (chargePerShotLevel < maxChargePerShotLevel)
+                if (chargePerShotLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(chargePerShotLevel + 2, 3) * 1000);
                     chargePerShotLevel = chargePerShotLevel+ 1;
-                    currentChargePerShot = baseChargePerShot - chargePerShotLevel * .01f;
+                    currentChargePerShot = baseChargePerShot - chargePerShotLevel * deltaChargePerShot;
                 }
                 break;
             case "perk":
-                if (specialPerkLevel < maxSpecialPerkLevel)
+                if (specialPerkLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(specialPerkLevel + 2, 3) * 1000);
-                    specialPerkLevel = specialPerkLevel+ 1;
+                    specialPerkLevel = specialPerkLevel + 1;
                 }
                 break;
                 
@@ -498,9 +485,8 @@ public class SaveData
     public int hp;
     public bool[] completedLevels;
     public List<Weapon> weaponList;
-    public int gold;
-    public Weapon currentPrimary;
-    public Weapon currentSecondary;
+    public List<Weapon> equippedWeapons;
+    public int gold;    
     public int tutorialState;
 }
 

@@ -44,8 +44,8 @@ public class InputFieldScript : MonoBehaviour
         chronoWaveTimer = 0;
         hpRegenTimer = 0;           
         //globalData = GameObject.FindGameObjectWithTag("GlobalData").GetComponent<GlobalDataScript>();
-        primaryWeapon = GlobalDataScript.globalData.currentPrimary;
-        secondaryWeapon = GlobalDataScript.globalData.currentSecondary;
+        primaryWeapon = GlobalDataScript.globalData.equippedWeapons[0];
+        secondaryWeapon = GlobalDataScript.globalData.equippedWeapons[1];
         primaryCharge = 100;
         secondaryCharge = 100;
         shotCount = 0;
@@ -106,13 +106,13 @@ public class InputFieldScript : MonoBehaviour
                         SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(primaryWeapon.projectile), .5f);
                         if(primaryWeapon.specialPerk == "flood of light")
                         {
-                            bulletInstance.transform.localScale = new Vector3((bulletInstance.transform.localScale.x + (bulletInstance.transform.localScale.x * .2f * primaryWeapon.specialPerkLevel)), bulletInstance.transform.localScale.y, bulletInstance.transform.localScale.z);
+                            bulletInstance.transform.localScale = new Vector3((bulletInstance.transform.localScale.x + (bulletInstance.transform.localScale.x * .4f * primaryWeapon.specialPerkLevel)), bulletInstance.transform.localScale.y*25, bulletInstance.transform.localScale.z);
                             //bulletInstance.GetComponent<BoxCollider2D>().size.Set(bulletInstance.GetComponent<BoxCollider2D>().size.x + bulletInstance.GetComponent<BoxCollider2D>().size.x * .2f * primaryWeapon.specialPerkLevel, bulletInstance.GetComponent<BoxCollider2D>().size.y);
                         }
 
                         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         Vector3 direction = targetPosition - bulletInstance.transform.position;
-                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg +GlobalDataScript.globalData.currentPrimary.rotation);
+                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg +GlobalDataScript.globalData.equippedWeapons[0].rotation);
 
                         //Quaternion.Euler(direction);
                         //direction.Normalize();
@@ -163,7 +163,7 @@ public class InputFieldScript : MonoBehaviour
 
                         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         Vector3 direction = targetPosition - bulletInstance.transform.position;
-                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + GlobalDataScript.globalData.currentSecondary.rotation);
+                        Vector3 targetRotation = bulletInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + GlobalDataScript.globalData.equippedWeapons[1].rotation);
 
                         //Quaternion.Euler(direction);
                         //direction.Normalize();
