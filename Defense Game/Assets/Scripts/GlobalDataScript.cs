@@ -36,6 +36,11 @@ public class GlobalDataScript : MonoBehaviour
     public int armorAbilityLevel;
     public int chronoWaveAbilityLevel;
     public int turretLevel;
+    public int maxAbilityLevel = 5;
+    public int maxTurretLevel = 4;
+    public int maxNukes = 3;
+    public int maxFreezes = 10;
+    public int maxDoublers = 5;
     public AudioClip fireWeaponSound;
     public AudioClip iceWeaponSound;
     public AudioClip lightWeaponSound;
@@ -43,6 +48,7 @@ public class GlobalDataScript : MonoBehaviour
     public AudioClip teslaWeaponSound;
     public AudioClip radiationWeaponSound;
     public EventSystem eventHandler;
+    bool isHardModeActive;
     void Awake()
     {
         if (globalData == null)
@@ -76,7 +82,11 @@ public class GlobalDataScript : MonoBehaviour
         armorAbilityLevel=1;
         chronoWaveAbilityLevel=1;
         turretLevel = 4;
+        isHardModeActive = false;
         powerups = new List<Powerup>();
+        powerups.Add(new Powerup("destroy"));
+        powerups.Add(new Powerup("freeze"));
+        powerups.Add(new Powerup("damage"));
         questList = new List<Quest>(10);
         questList.Add(new Quest("Quest 1", 3, true, "Beat levels 1, 2, and 3.", new string[3] { "Beat level 1.", "Beat level 2.", "Beat level 3." }));
         questList.Add(new Quest("Quest 2", 1, true, "Buy a new weapon.", new string[1] { "Buy a Weapon." }));
@@ -147,17 +157,22 @@ public class GlobalDataScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("Free gold given.");
+            Debug.Log("Free gold given.");            
+            globalData.gold = globalData.gold + 100000000;
             if (GameObject.FindGameObjectWithTag("GoldCount") != null)
             {
                 GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
             }
-            globalData.gold = globalData.gold + 100000000;
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             Debug.Log("Tutorial skipped.");
             globalData.tutorialState = 3;
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("Hard mode toggled.");
+            isHardModeActive = !isHardModeActive;
         }
         //Debug.Log(questList[0].name);
         //Debug.Log(questList);
@@ -287,21 +302,78 @@ public class GlobalDataScript : MonoBehaviour
         }
     }
 
-    public void AddPowerup(string powerupType)
+    public void UpgradeAbility(string abilityType)
     {
-        bool found = false;
+        switch(abilityType)
+        {
+            case "Armor":
+                if(armorAbilityLevel<maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(armorAbilityLevel + 2, 3) * 500);
+                    armorAbilityLevel += 1;
+                }
+                break;
+            case "Regen":
+                if (regenAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(regenAbilityLevel + 2, 3) * 500);
+                    regenAbilityLevel += 1;
+                }
+                break;
+            case "Wave":
+                if (chronoWaveAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(chronoWaveAbilityLevel + 2, 3) * 500);
+                    chronoWaveAbilityLevel += 1;
+                }
+                break;
+            case "Turret":
+                if (turretLevel < maxTurretLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(turretLevel + 2, 3) * 5000);
+                    turretLevel += 1;
+                }
+                break;
+            case "Rewind":
+                if (timeAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(timeAbilityLevel + 2, 3) * 500);
+                    timeAbilityLevel += 1;
+                }
+                break;
+            case "Spike":
+                if (spikeAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(spikeAbilityLevel + 2, 3) * 500);
+                    spikeAbilityLevel += 1;
+                }
+                break;
+            case "Streak":
+                if (hotStreakAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(hotStreakAbilityLevel + 2, 3) * 500);
+                    hotStreakAbilityLevel += 1;
+                }
+                break;
+            case "Precision":
+                if (precisionAbilityLevel < maxAbilityLevel)
+                {
+                    gold = gold - (int)(Mathf.Pow(precisionAbilityLevel + 2, 3) * 500);
+                    precisionAbilityLevel += 1;
+                }
+                break;
+
+        }
+    }
+    public void AddPowerup(string powerupType)
+    {        
         for (int i = 0; i < powerups.Count; i++)
         {
             if (powerupType == powerups[i].type)
             {
                 powerups[i].editCount(1);
-                found = true;
+                
             }
-        }
-        if (!found)
-        {
-            powerups.Add(new Powerup(powerupType));
-            Debug.Log("powerup added");
         }
     }
 
@@ -315,23 +387,25 @@ public class GlobalDataScript : MonoBehaviour
         Debug.Log("Powerup used");
         Debug.Log(powerups);
         Debug.Log(powerups[index].count);
-        powerups[index].editCount(-1);
-        Debug.Log("Count deducted");
-        Debug.Log(powerups[index].count);
-        GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (GameObject enemy in enemyList)
+        if (powerups[index].count > 0)
         {
-            ExecuteEvents.Execute<ICustomMessageTarget>(enemy, null, (x, y) => x.UsePowerup(powerups[index].type));
+            powerups[index].editCount(-1);
+            Debug.Log("Count deducted");
+            Debug.Log(powerups[index].count);
+            GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (GameObject enemy in enemyList)
+            {
+                ExecuteEvents.Execute<ICustomMessageTarget>(enemy, null, (x, y) => x.UsePowerup(powerups[index].type));
+            }
+
+            GameObject[] buttonList = GameObject.FindGameObjectsWithTag("PowerupButton");
+            foreach (GameObject button in buttonList)
+            {
+                ExecuteEvents.Execute<IPowerUpdate>(button, null, (x, y) => x.InfoUpdate());
+            }
         }
-        if (powerups[index].count <= 0)
-        {
-            powerups.RemoveAt(index);
-        }
-        GameObject[] buttonList = GameObject.FindGameObjectsWithTag("PowerupButton");
-        foreach (GameObject button in buttonList)
-        {
-            ExecuteEvents.Execute<IPowerUpdate>(button, null, (x, y) => x.InfoUpdate());
-        }
+        
+       
     }
     public void ResetBuffs()
     {

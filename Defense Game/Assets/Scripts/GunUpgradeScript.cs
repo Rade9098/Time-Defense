@@ -64,6 +64,10 @@ public class GunUpgradeScript : MonoBehaviour
                 
     }
 
+    void OnEnable()
+    {
+        UpdateTexts();
+    }
     void UpdateTexts()
     {
         Debug.Log("Updating Text");
