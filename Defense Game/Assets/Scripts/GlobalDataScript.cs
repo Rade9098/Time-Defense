@@ -48,7 +48,8 @@ public class GlobalDataScript : MonoBehaviour
     public AudioClip teslaWeaponSound;
     public AudioClip radiationWeaponSound;
     public EventSystem eventHandler;
-    bool isHardModeActive;
+    public bool isHardModeActive;
+    public bool isStreakActive;
     void Awake()
     {
         if (globalData == null)
@@ -74,15 +75,16 @@ public class GlobalDataScript : MonoBehaviour
         goldBonus = 1;
         damageBonus = 1;
         tutorialState = 0;
-        timeAbilityLevel = 1;
-        spikeAbilityLevel =1;
-        precisionAbilityLevel=1;
-        hotStreakAbilityLevel=1;
-        regenAbilityLevel=1;
-        armorAbilityLevel=1;
-        chronoWaveAbilityLevel=1;
-        turretLevel = 4;
+        timeAbilityLevel = 0;
+        spikeAbilityLevel =0;
+        precisionAbilityLevel=0;
+        hotStreakAbilityLevel=0;
+        regenAbilityLevel=0;
+        armorAbilityLevel=0;
+        chronoWaveAbilityLevel=0;
+        turretLevel = 0;
         isHardModeActive = false;
+        isStreakActive = false;
         powerups = new List<Powerup>();
         powerups.Add(new Powerup("destroy"));
         powerups.Add(new Powerup("freeze"));
@@ -105,7 +107,7 @@ public class GlobalDataScript : MonoBehaviour
         weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .7f, .05f, 10, 3, 5, 1, 2.5f, .2f, "freeze", 100f));
         weaponList.Add(new Weapon("Light beam", true, "LightProjectile", 3, .3f, 50, 20, 2, 1f, 80, 7, "flood of light", 000f));
         weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, .02f, 15, 5, 5, 1, 5f, .3f, "pierce", 100f));
-        weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, .012f, 10, 3, 2, .5f, 2.5f, .2f, "chain lightning", 100f));
+        weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, .012f, 7, 2, 2, .5f, 2.5f, .2f, "chain lightning", 100f));
         weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, .012f, 5, 2, 7, 1.2f, .5f, .05f, "poison", 70f));
         equippedWeapons = new List<Weapon>(weaponList);
         equippedWeapons[0].equipped = 0;
@@ -171,7 +173,14 @@ public class GlobalDataScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("Hard mode toggled.");
+            if(isHardModeActive)
+            {
+                Debug.Log("Hard mode deactivated.");
+            }
+            else
+            {
+                Debug.Log("Hard mode activated.");
+            }
             isHardModeActive = !isHardModeActive;
         }
         //Debug.Log(questList[0].name);
@@ -189,6 +198,15 @@ public class GlobalDataScript : MonoBehaviour
         data.hp = hp;
         data.gold = gold;
         data.tutorialState = tutorialState;
+        data.timeAbilityLevel = timeAbilityLevel;
+        data.spikeAbilityLevel = spikeAbilityLevel;
+        data.precisionAbilityLevel = precisionAbilityLevel;
+        data.hotStreakAbilityLevel = hotStreakAbilityLevel;
+        data.regenAbilityLevel = regenAbilityLevel;
+        data.armorAbilityLevel = armorAbilityLevel;
+        data.chronoWaveAbilityLevel = chronoWaveAbilityLevel;
+        data.turretLevel = turretLevel;
+        data.powerups = powerups;
         bf.Serialize(file, data);
         file.Close();
         Debug.Log("data saved");
@@ -226,6 +244,15 @@ public class GlobalDataScript : MonoBehaviour
             hp = data.hp;
             gold = data.gold;
             tutorialState = data.tutorialState;
+            timeAbilityLevel = data.timeAbilityLevel;
+            spikeAbilityLevel = data.spikeAbilityLevel;
+            precisionAbilityLevel = data.precisionAbilityLevel;
+            hotStreakAbilityLevel = data.hotStreakAbilityLevel;
+            regenAbilityLevel = data.regenAbilityLevel;
+            armorAbilityLevel = data.armorAbilityLevel;
+            chronoWaveAbilityLevel = data.chronoWaveAbilityLevel;
+            turretLevel = data.turretLevel;
+            powerups = data.powerups;
             Debug.Log("data loaded");
             if (GameObject.FindGameObjectWithTag("GoldCount") != null)
             {
@@ -562,8 +589,17 @@ public class SaveData
     public List<Weapon> equippedWeapons;
     public int gold;    
     public int tutorialState;
+    public int timeAbilityLevel;
+    public int spikeAbilityLevel;
+    public int precisionAbilityLevel;
+    public int hotStreakAbilityLevel;
+    public int regenAbilityLevel;
+    public int armorAbilityLevel;
+    public int chronoWaveAbilityLevel;
+    public int turretLevel;
+    public List<Powerup> powerups;
 }
-
+[Serializable]
 public class Powerup
 {
     public string type;

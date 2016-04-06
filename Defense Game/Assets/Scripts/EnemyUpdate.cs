@@ -9,6 +9,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     public int threatValue;
     public int speed;
     public int attack;
+    float precisionMultiplier;
     int burnStack;
     bool isSlowed;
     bool isPoisoned;
@@ -44,7 +45,11 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         rigidBody.AddForce(new Vector2(speed, 0));
         
         //levelCompleteScreen = GameObject.FindGameObjectWithTag("LevelCompleteScreen");        
-        hp = 300;
+        hp = 30;
+        if(GlobalDataScript.globalData.isHardModeActive)
+        {
+            hp *= 10;
+        }
         threatValue = 1;
         attack = 1;
         attackDistance = 1.6f;
@@ -54,6 +59,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         burnStack = 0;
         isSlowed = false;
         isPoisoned = false;
+        precisionMultiplier = 1;
         //globalData = GameObject.FindGameObjectWithTag("GlobalData").GetComponent<GlobalDataScript>();
 	}
 	
@@ -202,12 +208,22 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        
         //Debug.Log(other.tag);
         if (other.tag == "FireProjectile")
         {
             if(GlobalDataScript.globalData.weaponList[0].equipped<2)
             {
-                hp = (int)(hp - (GlobalDataScript.globalData.weaponList[0].currentDamage + burnStack * GlobalDataScript.globalData.weaponList[0].currentDamage / 2) * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - (GlobalDataScript.globalData.weaponList[0].currentDamage + burnStack * GlobalDataScript.globalData.weaponList[0].currentDamage / 2) * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
             }
             else
             {
@@ -231,7 +247,16 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         {
             if (GlobalDataScript.globalData.weaponList[2].equipped < 2)
             {
-                hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[2].currentDamage * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
             }
             else
             {
@@ -245,7 +270,16 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         {
             if (GlobalDataScript.globalData.weaponList[3].equipped < 2)
             {
-                hp = (int)(hp - GlobalDataScript.globalData.weaponList[3].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[3].currentDamage * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
                 other.GetComponent<DarkProjectileScript>().collisionCounter = other.GetComponent<DarkProjectileScript>().collisionCounter + 1;
                 if (other.GetComponent<DarkProjectileScript>().collisionCounter >= GlobalDataScript.globalData.weaponList[3].specialPerkLevel + 1)
                 {
@@ -268,7 +302,16 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         {
             if (GlobalDataScript.globalData.weaponList[4].equipped < 2)
             {
-                hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
                 Destroy(other.gameObject);
                 chainArray = GameObject.FindGameObjectsWithTag("Enemy");
                 GameObject priorEnemy = this.gameObject;
@@ -289,8 +332,8 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                             {
                                 currentEnemy = chainArray[randomAddress + 1];
                             }
-                        }
-                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                        }                        
+                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage/2 * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
                         Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
                         direction.z = 0;
                         boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction / 2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
@@ -327,7 +370,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                                 currentEnemy = chainArray[randomAddress + 1];
                             }
                         }
-                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
+                        currentEnemy.GetComponent<EnemyUpdate>().hp = (int)(hp - GlobalDataScript.globalData.weaponList[4].currentDamage/6 * damageModifier * GlobalDataScript.globalData.damageBonus);
                         Vector3 direction = currentEnemy.transform.position - priorEnemy.transform.position;
                         direction.z = 0;
                         boltInstance = Instantiate(chainBolt, priorEnemy.transform.position + direction / 2, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
@@ -357,7 +400,16 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             
             if (GlobalDataScript.globalData.weaponList[1].equipped < 2)
             {
-                hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[1].currentDamage * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
                 if (!isSlowed)
                 {
                     isSlowed = true;
@@ -388,7 +440,16 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             }
             if (GlobalDataScript.globalData.weaponList[5].equipped < 2)
             {
-                hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * damageModifier * GlobalDataScript.globalData.damageBonus);
+                if (Random.Range(0, 100) < GlobalDataScript.globalData.precisionAbilityLevel)
+                {
+                    precisionMultiplier = (float)GlobalDataScript.globalData.precisionAbilityLevel / 2 + 1;
+                    Debug.Log("Critical hit.");
+                }
+                else
+                {
+                    precisionMultiplier = 1;
+                }
+                hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage * precisionMultiplier * damageModifier * GlobalDataScript.globalData.damageBonus);
             }
             else
             {
@@ -424,6 +485,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 Destroy(this.gameObject);
             }
         }
+        precisionMultiplier = 1;
     }
 
     public void CheckDeath()
@@ -437,18 +499,18 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
             GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
             int random = Random.Range(0, 100);
-            if (random <= 3)
+            if (random <= GlobalDataScript.globalData.hotStreakAbilityLevel)
             {
-                Instantiate(powerup1, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+                GlobalDataScript.globalData.isStreakActive = true;
             }
-            else if (random <= 7)
-            {
-                Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-            }
-            else if (random <= 11)
-            {
-                Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-            }
+            //else if (random <= 7)
+            //{
+            //    Instantiate(powerup2, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+            //}
+            //else if (random <= 11)
+            //{
+            //    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
+            //}
             Destroy(this.gameObject);
         }
     }

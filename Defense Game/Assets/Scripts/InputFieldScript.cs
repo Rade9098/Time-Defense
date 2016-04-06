@@ -20,6 +20,9 @@ public class InputFieldScript : MonoBehaviour
     GameObject dummyCursorInstance;
     float timer;
     float chronoWaveTimer;
+    float streakTimer;
+    int streakFireRateModifier;
+    int streakChargeRateModifier;
     float hpRegenTimer;
     float primaryCharge;
     float secondaryCharge;
@@ -27,6 +30,7 @@ public class InputFieldScript : MonoBehaviour
     int shotCount;
     float tutorialTimer;    
     bool cursorSpawned;
+    bool isStreakActive;
     bool isReset;
     bool isFireable;    
     float initialXDeltaPrimary;
@@ -52,7 +56,11 @@ public class InputFieldScript : MonoBehaviour
         tutorialTimer=0;
         cursorSpawned = false;
         isReset = false;
-        isFireable = true; 
+        isFireable = true;
+        isStreakActive = false;
+        streakChargeRateModifier = 1;
+        streakFireRateModifier = 1;
+        streakTimer = 0;
         primaryChargeRender = GameObject.FindGameObjectWithTag("PrimaryChargeRender").GetComponent<RectTransform>();
         secondaryChargeRender = GameObject.FindGameObjectWithTag("SecondaryChargeRender").GetComponent<RectTransform>();
         hpRender = GameObject.FindGameObjectWithTag("HPRender").GetComponent<RectTransform>();
@@ -64,7 +72,27 @@ public class InputFieldScript : MonoBehaviour
 	// Update is called once per frame
     void Update()
     {
-       
+       if(GlobalDataScript.globalData.isStreakActive)
+        {
+            GlobalDataScript.globalData.isStreakActive = false;
+            isStreakActive = true;
+            streakFireRateModifier = 2;
+            streakChargeRateModifier = 3;
+            streakTimer = 0;
+            //Debug.Log("Streak Activated.");
+        }
+       if( isStreakActive)
+        {
+            streakTimer = streakTimer + Time.deltaTime;
+            if(streakTimer > GlobalDataScript.globalData.hotStreakAbilityLevel)
+            {
+                isStreakActive = false;
+                streakTimer = 0;
+                streakFireRateModifier = 1;
+                streakChargeRateModifier = 1;
+                //Debug.Log("Streak Deactivated.");
+            }
+        }
         chargeTimer = chargeTimer + Time.deltaTime;
         
         timer = timer + Time.deltaTime;
@@ -83,9 +111,9 @@ public class InputFieldScript : MonoBehaviour
             {
                 hpRegenTimer = 0;
                 GlobalDataScript.globalData.hp = GlobalDataScript.globalData.hp + GlobalDataScript.globalData.regenAbilityLevel;
-                if(GlobalDataScript.globalData.hp > 100+GlobalDataScript.globalData.hpBonus)
+                if(GlobalDataScript.globalData.hp > 100+GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel)
                 {
-                    GlobalDataScript.globalData.hp = 100 + GlobalDataScript.globalData.hpBonus;
+                    GlobalDataScript.globalData.hp = 100 + GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel;
                 }
                 GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
             }
@@ -95,7 +123,7 @@ public class InputFieldScript : MonoBehaviour
             if (Input.GetMouseButton(0))
             {
 
-                if (timer >= primaryWeapon.currentFireRate)
+                if (timer >= primaryWeapon.currentFireRate/streakFireRateModifier)
                 {
 
                     if (primaryCharge >= primaryWeapon.currentChargePerShot)
@@ -141,7 +169,7 @@ public class InputFieldScript : MonoBehaviour
                 {
                     chargeTimer = 0;
                 }
-                primaryCharge = primaryCharge + primaryWeapon.currentChargeRate;
+                primaryCharge = primaryCharge + primaryWeapon.currentChargeRate*streakChargeRateModifier;
                 if (primaryCharge > 100)
                 {
                     primaryCharge = 100;
@@ -151,7 +179,7 @@ public class InputFieldScript : MonoBehaviour
             if (Input.GetMouseButton(1))
             {
 
-                if (timer >= secondaryWeapon.currentFireRate)
+                if (timer >= secondaryWeapon.currentFireRate/streakFireRateModifier)
                 {
                     if (secondaryCharge >= secondaryWeapon.currentChargePerShot)
                     {
@@ -190,7 +218,7 @@ public class InputFieldScript : MonoBehaviour
             else if (chargeTimer >= 1)
             {
                 chargeTimer = 0;
-                secondaryCharge = secondaryCharge + secondaryWeapon.currentChargeRate;
+                secondaryCharge = secondaryCharge + secondaryWeapon.currentChargeRate*streakChargeRateModifier;
                 if (secondaryCharge > 100)
                 {
                     secondaryCharge = 100;
@@ -207,7 +235,7 @@ public class InputFieldScript : MonoBehaviour
             
             secondaryChargeRender.sizeDelta = new Vector2(-initialXDeltaSecondary+ (initialXDeltaSecondary*secondaryCharge )/100-6, secondaryChargeRender.sizeDelta.y);
 
-            hpRender.sizeDelta = new Vector2(-initialXDeltaHP + (initialXDeltaHP * GlobalDataScript.globalData.hp) / (101+GlobalDataScript.globalData.hpBonus), hpRender.sizeDelta.y);
+            hpRender.sizeDelta = new Vector2(-initialXDeltaHP + (initialXDeltaHP * GlobalDataScript.globalData.hp) / (101+GlobalDataScript.globalData.hpBonus+35*GlobalDataScript.globalData.armorAbilityLevel), hpRender.sizeDelta.y);
         
             if (GlobalDataScript.globalData.tutorialState == 1)
             {

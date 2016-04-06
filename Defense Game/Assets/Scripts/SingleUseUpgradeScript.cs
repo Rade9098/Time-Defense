@@ -40,18 +40,28 @@ public class SingleUseUpgradeScript : MonoBehaviour
 
     public void Repair()
     {
+        GlobalDataScript.globalData.gold += -500;
         GlobalDataScript.globalData.hp += 30;
         if(GlobalDataScript.globalData.hp > GlobalDataScript.globalData.armorAbilityLevel*35 + 100)
         {
             GlobalDataScript.globalData.hp = GlobalDataScript.globalData.armorAbilityLevel * 35 + 100;
         }
+        if (GameObject.FindGameObjectWithTag("GoldCount") != null)
+        {
+            GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
+        }
+        if (GameObject.FindGameObjectWithTag("HPCount") != null)
+        {
+            GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
+        }
+        UpdateTexts();
     }
 
     void OnEnable()
     {
         UpdateTexts();
     }
-    void UpdateTexts()
+    public void UpdateTexts()
     {
         Debug.Log("Updating Text");
         

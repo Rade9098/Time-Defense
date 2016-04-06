@@ -23,7 +23,7 @@ public class TurretScript : MonoBehaviour
             weapon = GlobalDataScript.globalData.equippedWeapons[position + 1];
             angle = this.gameObject.transform.rotation.eulerAngles.z;
             timer = 0;
-            charge = 100;
+            charge = 30;
             chargeTimer = 0;
         }
 	}
@@ -39,7 +39,7 @@ public class TurretScript : MonoBehaviour
             if (charge >= weapon.currentChargePerShot*1.2f)
             {
                 timer = 0;
-                charge = charge - weapon.currentChargePerShot;
+                charge = charge - weapon.currentChargePerShot*1.2f;
                 bulletInstance = Instantiate(GlobalDataScript.globalData.GetProjectile(weapon.projectile), transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(weapon.projectile), .5f);
                 if (weapon.specialPerk == "flood of light")
@@ -70,17 +70,26 @@ public class TurretScript : MonoBehaviour
                 //bulletInstance.velocity = new Vector2(speed, 0);
                 //bulletInstance.transform.Rotate(0, 0, Mathf.Atan2(Input.mousePosition.y, Input.mousePosition.x) * Mathf.Rad2Deg);
             }
-            if (chargeTimer >= 1 && charge < 100)
-            {                
-                    chargeTimer = 0;
-                
-                charge = charge + weapon.currentChargeRate/30;
-                if (charge > 100)
-                {
-                    charge = 100;
-                }
+            
+        }
+        if (chargeTimer >= 1 && charge < 100)
+        {
+            chargeTimer = 0;
 
+            charge = charge + weapon.currentChargeRate / 15;
+            if (charge > 100)
+            {
+                charge = 100;
             }
+            if (weapon == GlobalDataScript.globalData.weaponList[2])
+            {
+                //Debug.Log("Light beam charge: " + charge);
+                if (charge < 90)
+                {
+                    charge = 90;
+                }
+            }
+
         }
     }
 }

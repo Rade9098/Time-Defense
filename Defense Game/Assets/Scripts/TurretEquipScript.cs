@@ -20,7 +20,7 @@ public class TurretEquipScript : MonoBehaviour
 	
 	}
 
-    public void Unlock()
+    void OnEnable()
     {
         UpdateText();
     }
@@ -41,20 +41,23 @@ public class TurretEquipScript : MonoBehaviour
 
     public void UpdateText()
     {
-        if (GlobalDataScript.globalData.turretLevel >= turretPosition)
+        if (buttonList != null)
         {
-            statusText.GetComponent<UnityEngine.UI.Text>().text = "Equipped: " + GlobalDataScript.globalData.equippedWeapons[turretPosition + 1].name;
-            foreach (UnityEngine.UI.Button button in buttonList)
+            if (GlobalDataScript.globalData.turretLevel >= turretPosition)
             {
-                button.interactable = true;
+                statusText.GetComponent<UnityEngine.UI.Text>().text = "Equipped: " + GlobalDataScript.globalData.equippedWeapons[turretPosition + 1].name;
+                foreach (UnityEngine.UI.Button button in buttonList)
+                {
+                    button.interactable = true;
+                }
             }
-        }
-        else
-        {
-            statusText.GetComponent<UnityEngine.UI.Text>().text = "Locked.";
-            foreach (UnityEngine.UI.Button button in buttonList)
+            else
             {
-                button.interactable = false;
+                statusText.GetComponent<UnityEngine.UI.Text>().text = "Locked.";
+                foreach (UnityEngine.UI.Button button in buttonList)
+                {
+                    button.interactable = false;
+                }
             }
         }
     }
