@@ -10,6 +10,8 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     public int speed;
     public int attack;
     float precisionMultiplier;
+    public int minGold;
+    public int maxGold;
     int burnStack;
     bool isSlowed;
     bool isPoisoned;
@@ -17,6 +19,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     GameObject[] chainArray;
     public GameObject chainBolt;
     GameObject boltInstance;
+    GameObject attackInstance;
     public GameObject iceAoE;
     public GameObject radiationAoE;
     public float attackDistance;
@@ -34,25 +37,28 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     float poisonTimer;
     static float damageTimer;    
     public static int damageModifier = 1;
+    float attackSpeedModifier = 1;
     public AudioClip attackSound;
     public GameObject attackSprite;
+    public bool isRanged;
+    public bool isFlier;
 	// Use this for initialization
 	void Start () 
     {
         //damageModifier = 1;
-        speed = 75;
+        //speed = 75;
         rigidBody = this.GetComponent<Rigidbody2D>();
         rigidBody.AddForce(new Vector2(speed, 0));
         
         //levelCompleteScreen = GameObject.FindGameObjectWithTag("LevelCompleteScreen");        
-        hp = 30;
+        //hp = 30;
         if(GlobalDataScript.globalData.isHardModeActive)
         {
             hp *= 10;
         }
-        threatValue = 1;
-        attack = 1;
-        attackDistance = 1.6f;
+        //threatValue = 1;
+        //attack = 1;
+        //attackDistance = 1.6f;
         timer = 0;
 
         //chainArray = new GameObject[GlobalDataScript.globalData.weaponList[4].maxSpecialPerkLevel];
@@ -73,12 +79,42 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
            if (transform.position.x >= attackDistance)
             {
                 timer = timer + Time.deltaTime;
-               if(timer >= 1)
+               if(timer >= 1/((speed*attackSpeedModifier)/50f))
                {
                     int random = Random.Range(0,100);
                     timer = 0;
                     SoundManager.singleton.playModulatedSound(attackSound, 1);
-                    Instantiate(attackSprite, this.gameObject.transform.position, this.gameObject.transform.rotation);
+                    if (isRanged || isFlier)
+                    {
+                        attackInstance = Instantiate(attackSprite, this.gameObject.transform.position, this.gameObject.transform.rotation) as GameObject;
+                        attackInstance.GetComponent<AttackSpriteScript>().ranged = true;
+                        attackInstance.GetComponent<AttackSpriteScript>().decayTime = 2;
+                        Vector3 targetPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+                        Vector3 direction = targetPosition - attackInstance.transform.position;
+                        Vector3 targetRotation = attackInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+
+                        //Quaternion.Euler(direction);
+                        //direction.Normalize();
+                        //direction = direction * speed;
+
+                        //bulletInstance.velocity = new Vector2(direction.x, direction.y);
+                        attackInstance.transform.Rotate(targetRotation);
+                        //bulletBody = bulletInstance.GetComponent<Rigidbody2D>();
+                        //direction = direction.normalized;
+                        //Debug.Log(direction);
+
+                        direction.z = 0;
+                        //direction = direction.normalized;
+                        //Debug.Log(direction);
+                        direction.x = direction.x * 100;
+                        direction.y = direction.y * 100;
+                        //Debug.Log(direction);
+                        attackInstance.GetComponent<Rigidbody2D>().AddForce(direction);
+                    }
+                    else
+                    {
+                        Instantiate(attackSprite, this.gameObject.transform.position, this.gameObject.transform.rotation);
+                    }
                     if (random > GlobalDataScript.globalData.timeAbilityLevel)
                     {
                         GlobalDataScript.globalData.hp = GlobalDataScript.globalData.hp - attack;
@@ -109,7 +145,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
 
                         if (hp <= 0)
                         {
-                            int gold = Random.Range(25, 100);
+                            int gold = Random.Range(minGold, maxGold);
                             GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
                             GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
                             coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
@@ -156,6 +192,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             if (slowTimer >= GlobalDataScript.globalData.weaponList[1].specialPerkLevel)
             {
                 isSlowed = false;
+                attackSpeedModifier = 1;
                 if (GlobalDataScript.globalData.weaponList[1].equipped < 2)
                 {
                     rigidBody.AddForce(new Vector2(speed * .7f, 0));
@@ -414,6 +451,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 {
                     isSlowed = true;
                     rigidBody.AddForce(new Vector2(-speed * .7f, 0));
+                    attackSpeedModifier = .3f;
                     this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
                 }
             }
@@ -424,6 +462,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 {
                     isSlowed = true;
                     rigidBody.AddForce(new Vector2(-speed * .5f, 0));
+                    attackSpeedModifier = .5f;
                     this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
                 }
             }

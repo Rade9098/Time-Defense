@@ -4,7 +4,9 @@ using System.Collections;
 public class EnemySpawn : MonoBehaviour 
 {
 
-    public GameObject enemy;
+    public GameObject enemySatyr;
+    public GameObject enemyHyrda;
+    public GameObject enemyPegasus;
     GameObject enemyInstance;
     public GameObject levelCompleteScreen;
     UnityEngine.UI.Image levelTimerRender;
@@ -35,11 +37,11 @@ public class EnemySpawn : MonoBehaviour
         }
         else
         {
-            enemyInstance = Instantiate(enemy, new Vector3(-3, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+            enemyInstance = Instantiate(enemySatyr, new Vector3(-3, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
             enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-            enemyInstance = Instantiate(enemy, new Vector3(-3.5f, -1), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+            enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -1), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
             enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-            enemyInstance = Instantiate(enemy, new Vector3(-3.5f, -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+            enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
             enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
         }
 	
@@ -48,10 +50,10 @@ public class EnemySpawn : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            wave = wave + 10;
-        }
+        //if(Input.GetKeyDown(KeyCode.F))
+        //{
+        //    wave = wave + 10;
+        //}
         if (GlobalDataScript.globalData.tutorialState == 3)
         {
             levelTimer = levelTimer + Time.deltaTime;
@@ -72,7 +74,7 @@ public class EnemySpawn : MonoBehaviour
                 waveTimer = 0;
                 //EnemyInstance = Instantiate(Enemy, new Vector3(-5, Random.value*-2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 AddToSpawn(wave);
-                wave = Mathf.Pow(levelTimer, 1.5f) / 30 + 1;
+                wave = Mathf.Pow(levelTimer, 1.1f) / 30 + 1;
             }
             if (spawnTimer >= Random.value + .1)
             {
@@ -91,29 +93,29 @@ public class EnemySpawn : MonoBehaviour
         {
             if (!tutorial2IsSpawned)
             {
-                enemyInstance = Instantiate(enemy, new Vector3(-2, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-2.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-3, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-3, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-3.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-4, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-1.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-1.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-2, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-2.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-3, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-3, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-3.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-4, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemy, new Vector3(-1.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-1.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
                 tutorial2IsSpawned = true;
             }
@@ -130,12 +132,26 @@ public class EnemySpawn : MonoBehaviour
         float spawnRNG;
         while(spawnedStrength < waveStrength)
         {
-            spawnRNG = Random.value;
-            if(spawnRNG<=1)
+            spawnRNG = Random.Range(0,3);
+            if(spawnRNG<1)
             {
                 
                 spawnList.Enqueue(1);
-                spawnedStrength = spawnedStrength + enemy.GetComponent<EnemyUpdate>().threatValue;
+                spawnedStrength = spawnedStrength + enemySatyr.GetComponent<EnemyUpdate>().threatValue;
+                //Debug.Log(spawnedStrength);
+            }
+            else if (spawnRNG < 2)
+            {
+
+                spawnList.Enqueue(2);
+                spawnedStrength = spawnedStrength + enemyHyrda.GetComponent<EnemyUpdate>().threatValue;
+                //Debug.Log(spawnedStrength);
+            }
+            else if (spawnRNG < 3)
+            {
+
+                spawnList.Enqueue(3);
+                spawnedStrength = spawnedStrength + enemyPegasus.GetComponent<EnemyUpdate>().threatValue;
                 //Debug.Log(spawnedStrength);
             }
         }
@@ -147,7 +163,17 @@ public class EnemySpawn : MonoBehaviour
             int enemyType = (int)spawnList.Dequeue();
             if (enemyType == 1)
             {
-                enemyInstance = Instantiate(enemy, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
+            }
+            if (enemyType == 2)
+            {
+                enemyInstance = Instantiate(enemyHyrda, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
+            }
+            if (enemyType == 3)
+            {
+                enemyInstance = Instantiate(enemyPegasus, new Vector3(-5, Random.value * -2 +1.3f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
             }
         }
