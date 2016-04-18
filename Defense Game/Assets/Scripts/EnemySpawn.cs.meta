@@ -1,10 +1,23 @@
 fileFormatVersion: 2
 guid: ca2c847e5cb8e73409eaa19431912523
-timeCreated: 1442609697
+timeCreated: 1460947590
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - enemySatyr: {fileID: 117492, guid: 568daa4edefcb3d44b3e163f85faf829, type: 2}
+  - enemyGorgon: {fileID: 160466, guid: daa33de72cd40b6438f59888b58a7d38, type: 2}
+  - enemyPegasus: {fileID: 150142, guid: 840c00d93954d6a45bb57526a2c9d237, type: 2}
+  - enemyMermaid: {fileID: 169612, guid: c446c6f738a9f0843a57b594e0896845, type: 2}
+  - enemyHydra: {fileID: 172974, guid: b49cf8a84244ddf479e8fc02fc9c8f22, type: 2}
+  - enemyWerewolf: {fileID: 104168, guid: 14486a82d695d744f9c4973281a0eee1, type: 2}
+  - enemyVampire: {fileID: 106018, guid: d2070f9ab8f4885418434d83be11059f, type: 2}
+  - enemyCyclops: {fileID: 199218, guid: 515e2e43123933b4db7e09929148d0e4, type: 2}
+  - enemyBanshee: {fileID: 136498, guid: 593e433595cd8f742b2d367087f6404a, type: 2}
+  - enemyMinotaur: {fileID: 186042, guid: f08936ffd41a3d241a65f2bc62d4a48b, type: 2}
+  - enemyTroll: {fileID: 181494, guid: 66faa230f16499645bb5b90963b1e740, type: 2}
+  - enemyDragon: {fileID: 107276, guid: ab63aa7b5aaab0f4c9ee5b9a8ecaadc1, type: 2}
+  - levelCompleteScreen: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

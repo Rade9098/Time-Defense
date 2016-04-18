@@ -187,7 +187,7 @@ public class InputFieldScript : MonoBehaviour
                         timer = 0;
                         bulletInstance = Instantiate(GlobalDataScript.globalData.GetProjectile(secondaryWeapon.projectile), transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                         SoundManager.singleton.playModulatedSound(GlobalDataScript.globalData.GetProjectileSound(secondaryWeapon.projectile), .5f);
-                        if (primaryWeapon.specialPerk == "flood of light")
+                        if (secondaryWeapon.specialPerk == "flood of light")
                         {
                             bulletInstance.transform.localScale = new Vector3((bulletInstance.transform.localScale.x + (bulletInstance.transform.localScale.x * .4f * secondaryWeapon.specialPerkLevel)), bulletInstance.transform.localScale.y * 25, bulletInstance.transform.localScale.z);
                             //bulletInstance.GetComponent<BoxCollider2D>().size.Set(bulletInstance.GetComponent<BoxCollider2D>().size.x + bulletInstance.GetComponent<BoxCollider2D>().size.x * .2f * primaryWeapon.specialPerkLevel, bulletInstance.GetComponent<BoxCollider2D>().size.y);

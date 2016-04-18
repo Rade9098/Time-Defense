@@ -1,15 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemySpawn : MonoBehaviour 
 {
 
     public GameObject enemySatyr;
-    public GameObject enemyHyrda;
+    public GameObject enemyGorgon;
     public GameObject enemyPegasus;
+    public GameObject enemyMermaid;
+    public GameObject enemyHydra;
+    public GameObject enemyWerewolf;
+    public GameObject enemyVampire;
+    public GameObject enemyCyclops;
+    public GameObject enemyBanshee;
+    public GameObject enemyMinotaur;
+    public GameObject enemyTroll;
+    public GameObject enemyDragon;
+    List<GameObject> enemyList;
     GameObject enemyInstance;
     public GameObject levelCompleteScreen;
     UnityEngine.UI.Image levelTimerRender;
+    public int spawnRange;
+    public int currentLevel;
     float waveTimer;
     float spawnTimer;
     float levelTimer;
@@ -21,6 +34,19 @@ public class EnemySpawn : MonoBehaviour
 	// Use this for initialization
 	void Start () 
         {
+        enemyList = new List<GameObject>();
+        enemyList.Add(enemySatyr);
+        enemyList.Add(enemyGorgon);
+        enemyList.Add(enemyPegasus);
+        enemyList.Add(enemyMermaid);
+        enemyList.Add(enemyHydra);
+        enemyList.Add(enemyWerewolf);
+        enemyList.Add(enemyVampire);
+        enemyList.Add(enemyCyclops);
+        enemyList.Add(enemyBanshee);
+        enemyList.Add(enemyMinotaur);
+        enemyList.Add(enemyTroll);
+        enemyList.Add(enemyDragon);
         Time.timeScale = 1;
         waveTimer=0;
         spawnTimer = 0;
@@ -62,6 +88,7 @@ public class EnemySpawn : MonoBehaviour
             if (levelTimer >= 112)
             {
                 GlobalDataScript.globalData.ResetBuffs();
+                GlobalDataScript.globalData.completedLevels[currentLevel - 1] = true;
                 levelCompleteScreen.SetActive(true);
                 levelCompleteScreen.gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text = "Level Complete!";
                 Time.timeScale = 0;
@@ -74,7 +101,40 @@ public class EnemySpawn : MonoBehaviour
                 waveTimer = 0;
                 //EnemyInstance = Instantiate(Enemy, new Vector3(-5, Random.value*-2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 AddToSpawn(wave);
-                wave = Mathf.Pow(levelTimer, 1.1f) / 30 + 1;
+                switch (currentLevel)
+                {
+                    case 1:
+                        wave = Mathf.Pow(levelTimer, 1.1f) /30 + 1;
+                        break;
+                    case 2:
+                        wave = Mathf.Pow(levelTimer, 1.2f) + 1;
+                        break;
+                    case 3:
+                        wave = Mathf.Pow(levelTimer, 1.3f) + 1;
+                        break;
+                    case 4:
+                        wave = Mathf.Pow(levelTimer, 1.4f) + 1;
+                        break;
+                    case 5:
+                        wave = Mathf.Pow(levelTimer, 1.5f) + 1;
+                        break;
+                    case 6:
+                        wave = Mathf.Pow(levelTimer, 1.6f) + 1;
+                        break;
+                    case 7:
+                        wave = Mathf.Pow(levelTimer, 1.7f) + 1;
+                        break;
+                    case 8:
+                        wave = Mathf.Pow(levelTimer, 1.8f) + 1;
+                        break;
+                    case 9:
+                        wave = Mathf.Pow(levelTimer, 1.9f) + 1;
+                        break;
+                    case 10:
+                        wave = Mathf.Pow(levelTimer, 2f) + 1;
+                        break;
+                }
+                
             }
             if (spawnTimer >= Random.value + .1)
             {
@@ -132,28 +192,34 @@ public class EnemySpawn : MonoBehaviour
         float spawnRNG;
         while(spawnedStrength < waveStrength)
         {
-            spawnRNG = Random.Range(0,3);
-            if(spawnRNG<1)
+            spawnRNG = Random.Range(0,spawnRange+1);
+            if(spawnRNG>=spawnRange)
+            {
+                spawnList.Enqueue(spawnRange-1);
+                spawnedStrength += enemyList[spawnRange - 1].GetComponent<EnemyUpdate>().threatValue;
+
+            }
+            else
             {
                 
-                spawnList.Enqueue(1);
-                spawnedStrength = spawnedStrength + enemySatyr.GetComponent<EnemyUpdate>().threatValue;
+                spawnList.Enqueue((int)Mathf.Floor(spawnRNG));
+                spawnedStrength = spawnedStrength + enemyList[(int)Mathf.Floor(spawnRNG)].GetComponent<EnemyUpdate>().threatValue;
                 //Debug.Log(spawnedStrength);
             }
-            else if (spawnRNG < 2)
-            {
+            //else if (spawnRNG < 2)
+            //{
 
-                spawnList.Enqueue(2);
-                spawnedStrength = spawnedStrength + enemyHyrda.GetComponent<EnemyUpdate>().threatValue;
-                //Debug.Log(spawnedStrength);
-            }
-            else if (spawnRNG < 3)
-            {
+            //    spawnList.Enqueue(1);
+            //    spawnedStrength = spawnedStrength + enemyList[1].GetComponent<EnemyUpdate>().threatValue;
+            //    //Debug.Log(spawnedStrength);
+            //}
+            //else if (spawnRNG < 3)
+            //{
 
-                spawnList.Enqueue(3);
-                spawnedStrength = spawnedStrength + enemyPegasus.GetComponent<EnemyUpdate>().threatValue;
-                //Debug.Log(spawnedStrength);
-            }
+            //    spawnList.Enqueue(2);
+            //    spawnedStrength = spawnedStrength + enemyList[2].GetComponent<EnemyUpdate>().threatValue;
+            //    //Debug.Log(spawnedStrength);
+            //}
         }
     }
     void Spawn()
@@ -161,21 +227,29 @@ public class EnemySpawn : MonoBehaviour
         if (spawnList.Count > 0)
         {
             int enemyType = (int)spawnList.Dequeue();
-            if (enemyType == 1)
+            if (enemyList[enemyType].GetComponent<EnemyUpdate>().isFlier)
             {
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemyList[enemyType], new Vector3(-5, Random.value * -1.8f + 1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
             }
-            if (enemyType == 2)
+            else
             {
-                enemyInstance = Instantiate(enemyHyrda, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemyList[enemyType], new Vector3(-5, Random.value * -1.8f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
             }
-            if (enemyType == 3)
-            {
-                enemyInstance = Instantiate(enemyPegasus, new Vector3(-5, Random.value * -2 +1.3f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-                enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
-            }
+            //if (enemyType == 1)
+            //{
+                
+            //}
+            //if (enemyType == 2)
+            //{
+            //    enemyInstance = Instantiate(enemyGorgon, new Vector3(-5, Random.value * -2), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+            //    enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
+            //}
+            //if (enemyType == 3)
+            //{
+            //    
+            //}
         }
     }
 

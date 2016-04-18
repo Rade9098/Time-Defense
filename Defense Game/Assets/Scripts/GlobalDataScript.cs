@@ -74,7 +74,7 @@ public class GlobalDataScript : MonoBehaviour
         hpBonus = 0;
         goldBonus = 1;
         damageBonus = 1;
-        tutorialState = 0;
+        //tutorialState = 0;
         timeAbilityLevel = 0;
         spikeAbilityLevel =0;
         precisionAbilityLevel=0;
