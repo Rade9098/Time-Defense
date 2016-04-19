@@ -21,7 +21,7 @@ public class PopupScript : MonoBehaviour
         {
             if (!isTextChanged)
             {
-                this.gameObject.transform.FindChild("Text").GetComponent<UnityEngine.UI.Text>().text = "Looks like there's more on the way. With the way they're all lined up, a couple of ice beam shots should do the trick. Aim and fire with the right mouse button. Here's a demonstration.";
+                this.gameObject.transform.FindChild("Text").GetComponent<UnityEngine.UI.Text>().text = "Looks like there's more on the way. With the way they're all grouped up, a few ice beam shots should do the trick. Aim and fire with the right mouse button. Here's a demonstration.";
                 isTextChanged = true;
             }
         }

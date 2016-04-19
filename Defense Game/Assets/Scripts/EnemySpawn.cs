@@ -107,31 +107,31 @@ public class EnemySpawn : MonoBehaviour
                         wave = Mathf.Pow(levelTimer, 1.1f) /30 + 1;
                         break;
                     case 2:
-                        wave = Mathf.Pow(levelTimer, 1.2f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.2f)/30 + 1;
                         break;
                     case 3:
-                        wave = Mathf.Pow(levelTimer, 1.3f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.3f)/30 + 1;
                         break;
                     case 4:
-                        wave = Mathf.Pow(levelTimer, 1.4f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.4f)/30 + 1;
                         break;
                     case 5:
-                        wave = Mathf.Pow(levelTimer, 1.5f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.5f)/30 + 1;
                         break;
                     case 6:
-                        wave = Mathf.Pow(levelTimer, 1.6f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.6f) /30+ 1;
                         break;
                     case 7:
-                        wave = Mathf.Pow(levelTimer, 1.7f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.7f) /30+ 1;
                         break;
                     case 8:
-                        wave = Mathf.Pow(levelTimer, 1.8f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.8f) /30+ 1;
                         break;
                     case 9:
-                        wave = Mathf.Pow(levelTimer, 1.9f) + 1;
+                        wave = Mathf.Pow(levelTimer, 1.9f)/30 + 1;
                         break;
                     case 10:
-                        wave = Mathf.Pow(levelTimer, 2f) + 1;
+                        wave = Mathf.Pow(levelTimer, 2f)/30 + 1;
                         break;
                 }
                 
@@ -155,27 +155,27 @@ public class EnemySpawn : MonoBehaviour
             {
                 enemyInstance = Instantiate(enemySatyr, new Vector3(-2, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.1f, -1.65f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-3, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.2f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2f, -1.25f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-4, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.1f, -1.1f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-1.5f, -1.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.2f, -1.25f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-2, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-2.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4.1f, -.65f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-3, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4.2f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-3.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4f, -.25f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-4, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4.1f, -.1f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
-                enemyInstance = Instantiate(enemySatyr, new Vector3(-1.5f, -.5f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemySatyr, new Vector3(-4.2f, -.25f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<Rigidbody2D>().drag = 1000;
                 tutorial2IsSpawned = true;
             }
@@ -234,7 +234,7 @@ public class EnemySpawn : MonoBehaviour
             }
             else
             {
-                enemyInstance = Instantiate(enemyList[enemyType], new Vector3(-5, Random.value * -1.8f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+                enemyInstance = Instantiate(enemyList[enemyType], new Vector3(-5, Random.value * -1.5f - .7f), Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
                 enemyInstance.GetComponent<EnemyUpdate>().levelCompleteScreen = levelCompleteScreen;
             }
             //if (enemyType == 1)

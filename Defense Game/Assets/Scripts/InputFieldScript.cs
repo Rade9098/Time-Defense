@@ -323,7 +323,7 @@ public class InputFieldScript : MonoBehaviour
                 }
                 if (tutorialTimer >= 3)
                 {
-                    if (shotCount < 2)
+                    if (shotCount < 3)
                     {
                         timer = timer + Time.deltaTime;
                         if (timer >= secondaryWeapon.baseFireRate)

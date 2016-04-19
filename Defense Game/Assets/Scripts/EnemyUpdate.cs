@@ -147,7 +147,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
 
                         if (hp <= 0)
                         {
-                            int gold = Random.Range(minGold, maxGold) * hardModeMultiplier;
+                            int gold = Random.Range(minGold, maxGold) * hardModeMultiplier*threatValue;
                             GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
                             GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
                             coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
@@ -504,7 +504,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             //Destroy(other.gameObject);
             if (hp <= 0)
             {
-                int gold = Random.Range(minGold, maxGold) * hardModeMultiplier;
+                int gold = Random.Range(minGold, maxGold) * hardModeMultiplier*threatValue;
                 GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
                 GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
                 coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
@@ -533,7 +533,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
     {
         if (hp <= 0)
         {
-            int gold = Random.Range(minGold, maxGold) * hardModeMultiplier;
+            int gold = Random.Range(minGold, maxGold) * hardModeMultiplier * threatValue;
             GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
             GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
             coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
