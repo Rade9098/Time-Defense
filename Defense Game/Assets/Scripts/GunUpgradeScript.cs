@@ -41,7 +41,10 @@ public class GunUpgradeScript : MonoBehaviour
         Debug.Log("upgrading");
         weapon.Upgrade(stat);
         Debug.Log("upgrade complete");
-        UpdateTexts();
+        foreach (GameObject gunPanel in GameObject.FindGameObjectsWithTag("GunPanel"))
+        {
+            gunPanel.GetComponent<GunUpgradeScript>().UpdateTexts();
+        }
     }
 
     public void Equip(int slot)

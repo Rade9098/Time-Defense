@@ -240,6 +240,10 @@ public class InputFieldScript : MonoBehaviour
             secondaryChargeRender.sizeDelta = new Vector2(-initialXDeltaSecondary+ (initialXDeltaSecondary*secondaryCharge )/100-6, secondaryChargeRender.sizeDelta.y);
 
             hpRender.sizeDelta = new Vector2(-initialXDeltaHP + (initialXDeltaHP * GlobalDataScript.globalData.hp) / (101+GlobalDataScript.globalData.hpBonus+35*GlobalDataScript.globalData.armorAbilityLevel), hpRender.sizeDelta.y);
+        if(GlobalDataScript.globalData.hp <= 0)
+        {
+            hpRender.gameObject.SetActive(false);
+        }
         
             if (GlobalDataScript.globalData.tutorialState == 1)
             {

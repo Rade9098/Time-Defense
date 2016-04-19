@@ -17,6 +17,8 @@ public class PassiveUpgradeScript : MonoBehaviour
     public GameObject regenButton;
     public GameObject waveButton;
     public GameObject turretButton;
+    public GameObject activePanel;
+    public GameObject singleUsePanel;
 
     // Use this for initialization
     void Start()
@@ -37,6 +39,8 @@ public class PassiveUpgradeScript : MonoBehaviour
         GlobalDataScript.globalData.UpgradeAbility(ability);
         Debug.Log("upgrade complete");
         UpdateTexts();
+        activePanel.GetComponent<ActiveUpgradeScript>().UpdateTexts();
+        singleUsePanel.GetComponent<SingleUseUpgradeScript>().UpdateTexts();
     }
 
 
@@ -44,7 +48,7 @@ public class PassiveUpgradeScript : MonoBehaviour
     {
         UpdateTexts();
     }
-    void UpdateTexts()
+    public void UpdateTexts()
     {
         Debug.Log("Updating Text");
 
@@ -78,7 +82,7 @@ public class PassiveUpgradeScript : MonoBehaviour
         {
             waveCost.GetComponent<UnityEngine.UI.Text>().text = "MAX";
         }
-        if (GlobalDataScript.globalData.turretLevel < GlobalDataScript.globalData.maxAbilityLevel)
+        if (GlobalDataScript.globalData.turretLevel < GlobalDataScript.globalData.maxTurretLevel)
         {
             turretCost.GetComponent<UnityEngine.UI.Text>().text = "" + (Mathf.Pow(GlobalDataScript.globalData.turretLevel + 2, 3) * 5000);
         }

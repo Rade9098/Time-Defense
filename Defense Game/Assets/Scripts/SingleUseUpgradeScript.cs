@@ -16,6 +16,8 @@ public class SingleUseUpgradeScript : MonoBehaviour
     public GameObject freezeButton;
     public GameObject doublerButton;
     public GameObject repairButton;
+    public GameObject passivePanel;
+    public GameObject activePanel;
 
     // Use this for initialization
     void Start()
@@ -36,6 +38,8 @@ public class SingleUseUpgradeScript : MonoBehaviour
         GlobalDataScript.globalData.AddPowerup(powerup);
         Debug.Log("upgrade complete");
         UpdateTexts();
+        activePanel.GetComponent<ActiveUpgradeScript>().UpdateTexts();
+        passivePanel.GetComponent<PassiveUpgradeScript>().UpdateTexts();
     }    
 
     public void Repair()

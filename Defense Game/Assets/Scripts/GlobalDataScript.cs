@@ -389,8 +389,8 @@ public class GlobalDataScript : MonoBehaviour
                     precisionAbilityLevel += 1;
                 }
                 break;
-
         }
+        GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
     }
     public void AddPowerup(string powerupType)
     {        
@@ -402,6 +402,19 @@ public class GlobalDataScript : MonoBehaviour
                 
             }
         }
+        switch(powerupType)
+        {
+            case "destroy":
+                    gold -= 10000;
+                break;
+            case "freeze":
+                gold -= 5000;
+                break;
+            case "damage":
+                gold -= 8000;
+                break;
+        }
+        GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
     }
 
     public void UsePowerup(int index)
@@ -440,13 +453,17 @@ public class GlobalDataScript : MonoBehaviour
         {
             gold = (int)(gold + (goldBonus - 1) * levelGoldTracker);
         }
+        else
+        {
+            hp = 30;
+        }
         levelGoldTracker = 0;
         hpBonus = 0;
         goldBonus = 1;
         damageBonus = 1;
-        if (hp > 100)
+        if (hp > 100 + 35*armorAbilityLevel)
         {
-            hp = 100;
+            hp = 100 + 35 * armorAbilityLevel;
         }
     }
 }

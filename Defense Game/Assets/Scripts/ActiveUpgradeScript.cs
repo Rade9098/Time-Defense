@@ -17,6 +17,8 @@ public class ActiveUpgradeScript : MonoBehaviour
     public GameObject spikeButton;
     public GameObject precisionButton;
     public GameObject streakButton;
+    public GameObject passivePanel;
+    public GameObject singleUsePanel;
 
     // Use this for initialization
     void Start()
@@ -37,6 +39,8 @@ public class ActiveUpgradeScript : MonoBehaviour
         GlobalDataScript.globalData.UpgradeAbility(ability);
         Debug.Log("upgrade complete");
         UpdateTexts();
+        passivePanel.GetComponent<PassiveUpgradeScript>().UpdateTexts();
+        singleUsePanel.GetComponent<SingleUseUpgradeScript>().UpdateTexts();
     }
   
 
@@ -44,7 +48,7 @@ public class ActiveUpgradeScript : MonoBehaviour
     {
         UpdateTexts();
     }
-    void UpdateTexts()
+    public void UpdateTexts()
     {
         Debug.Log("Updating Text");
 
