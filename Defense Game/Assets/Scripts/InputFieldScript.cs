@@ -101,21 +101,25 @@ public class InputFieldScript : MonoBehaviour
         {
             chronoWaveTimer = chronoWaveTimer + Time.deltaTime;
             hpRegenTimer = hpRegenTimer + Time.deltaTime;
-            if (chronoWaveTimer >= 10)
+            if (GlobalDataScript.globalData.chronoWaveAbilityLevel > 0)
             {
-                chronoWaveTimer = 0;
-                bulletInstance = Instantiate(chronoWave, new Vector2(transform.position.x + 3, transform.position.y), Quaternion.Euler(new Vector3(0, 0, 180))) as GameObject;
-                bulletInstance.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100f, 0));
-            }
-            if(hpRegenTimer >= 5)
-            {
-                hpRegenTimer = 0;
-                GlobalDataScript.globalData.hp = GlobalDataScript.globalData.hp + GlobalDataScript.globalData.regenAbilityLevel;
-                if(GlobalDataScript.globalData.hp > 100+GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel)
+                if (chronoWaveTimer >= 10)
                 {
-                    GlobalDataScript.globalData.hp = 100 + GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel;
+
+                    chronoWaveTimer = 0;
+                    bulletInstance = Instantiate(chronoWave, new Vector2(transform.position.x + 3, transform.position.y), Quaternion.Euler(new Vector3(0, 0, 180))) as GameObject;
+                    bulletInstance.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100f, 0));
                 }
-                GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
+                if (hpRegenTimer >= 5)
+                {
+                    hpRegenTimer = 0;
+                    GlobalDataScript.globalData.hp = GlobalDataScript.globalData.hp + GlobalDataScript.globalData.regenAbilityLevel;
+                    if (GlobalDataScript.globalData.hp > 100 + GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel)
+                    {
+                        GlobalDataScript.globalData.hp = 100 + GlobalDataScript.globalData.hpBonus + 35 * GlobalDataScript.globalData.armorAbilityLevel;
+                    }
+                    GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
+                }
             }
         }
         if(isFireable)

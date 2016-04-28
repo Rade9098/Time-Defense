@@ -50,6 +50,9 @@ public class GlobalDataScript : MonoBehaviour
     public EventSystem eventHandler;
     public bool isHardModeActive;
     public bool isStreakActive;
+    public int multikillTracker;
+    public int killTracker;
+    public int supportUpgradeTracker;
     void Awake()
     {
         if (globalData == null)
@@ -99,7 +102,7 @@ public class GlobalDataScript : MonoBehaviour
         questList.Add(new Quest("Quest 7", 1, true, "Purchase 3 support upgrades.", new string[1] { "Buy 3 support upgrades (any non-weapon upgrades)" }));
         questList.Add(new Quest("Quest 8", 1, true, "Fully upgrade one weapon.", new string[1] { "Purchase all available upgrades on one weapon." }));
         questList.Add(new Quest("Quest 9", 3, true, "Beat levels 1, 2, and 3 with 100 hp or more.", new string[3] { "Beat level 1 with 100 hp", "Beat level 2 with 100 hp", "Beat level 3 with 100 hp" }));
-        questList.Add(new Quest("Quest 10", 1, true, "Beat level 1 on hard mode.", new string[1] { "Beat level 1 on hard mode." }));
+        questList.Add(new Quest("Quest 10", 1, true, "Beat a level on hard mode.", new string[1] { "Beat 1 level on hard mode." }));
         Debug.Log(questList[0].name);
         weaponList = new List<Weapon>(3);
         //weaponList.Add(fireWeapon);
@@ -117,6 +120,8 @@ public class GlobalDataScript : MonoBehaviour
         equippedWeapons[4].equipped = 4;
         equippedWeapons[5].equipped = 5;
         completedLevels = new bool[10];
+        multikillTracker = 0;
+        killTracker = 0;
         for (int i = 0; i < completedLevels.Length; i++)
         {
             completedLevels[i] = false;
@@ -338,6 +343,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(armorAbilityLevel + 2, 3) * 500);
                     armorAbilityLevel += 1;
+                    if (armorAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Regen":
@@ -345,6 +358,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(regenAbilityLevel + 2, 3) * 500);
                     regenAbilityLevel += 1;
+                    if (regenAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Wave":
@@ -352,6 +373,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(chronoWaveAbilityLevel + 2, 3) * 500);
                     chronoWaveAbilityLevel += 1;
+                    if(chronoWaveAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Turret":
@@ -359,6 +388,11 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(turretLevel + 2, 3) * 5000);
                     turretLevel += 1;
+                    supportUpgradeTracker += 1;
+                    if(supportUpgradeTracker == 3)
+                    {
+                        questList[6].UpdateObjective(1);
+                    }
                 }
                 break;
             case "Rewind":
@@ -366,6 +400,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(timeAbilityLevel + 2, 3) * 500);
                     timeAbilityLevel += 1;
+                    if (timeAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Spike":
@@ -373,6 +415,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(spikeAbilityLevel + 2, 3) * 500);
                     spikeAbilityLevel += 1;
+                    if (spikeAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Streak":
@@ -380,6 +430,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(hotStreakAbilityLevel + 2, 3) * 500);
                     hotStreakAbilityLevel += 1;
+                    if (hotStreakAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
             case "Precision":
@@ -387,6 +445,14 @@ public class GlobalDataScript : MonoBehaviour
                 {
                     gold = gold - (int)(Mathf.Pow(precisionAbilityLevel + 2, 3) * 500);
                     precisionAbilityLevel += 1;
+                    if (precisionAbilityLevel == 1)
+                    {
+                        supportUpgradeTracker += 1;
+                        if (supportUpgradeTracker == 3)
+                        {
+                            questList[6].UpdateObjective(1);
+                        }
+                    }
                 }
                 break;
         }
@@ -555,6 +621,10 @@ public class Weapon
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(fireRateLevel + 2, 3) * 1000);
                     fireRateLevel = fireRateLevel+1;
                     currentFireRate = baseFireRate - fireRateLevel*deltaFireRate;
+                    if(fireRateLevel >=2)
+                    {
+                        GlobalDataScript.globalData.questList[1].UpdateObjective(1);
+                    }
                     
                 }
                 break;
@@ -562,8 +632,12 @@ public class Weapon
                 if (damageLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(damageLevel + 2, 3) * 1000);
-                    damageLevel = damageLevel+ 1;
-                    currentDamage = baseDamage + damageLevel*deltaDamage;
+                    damageLevel = damageLevel + 1;
+                    currentDamage = baseDamage + damageLevel * deltaDamage;
+                    if (damageLevel >= 2)
+                    {
+                        GlobalDataScript.globalData.questList[1].UpdateObjective(1);
+                    }
                 }
                 break;
             case "chargeRate":
@@ -572,14 +646,22 @@ public class Weapon
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(chargeRateLevel + 2, 3) * 1000);
                     chargeRateLevel = chargeRateLevel + 1;
                     currentChargeRate = baseChargeRate + chargeRateLevel * deltaChargeRate;
+                    if (chargeRateLevel >= 2)
+                    {
+                        GlobalDataScript.globalData.questList[1].UpdateObjective(1);
+                    }
                 }
                 break;
             case "chargePerShot":
                 if (chargePerShotLevel < maxLevel)
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(chargePerShotLevel + 2, 3) * 1000);
-                    chargePerShotLevel = chargePerShotLevel+ 1;
+                    chargePerShotLevel = chargePerShotLevel + 1;
                     currentChargePerShot = baseChargePerShot - chargePerShotLevel * deltaChargePerShot;
+                    if (chargePerShotLevel >= 2)
+                    {
+                        GlobalDataScript.globalData.questList[1].UpdateObjective(1);
+                    }
                 }
                 break;
             case "perk":
@@ -587,9 +669,17 @@ public class Weapon
                 {
                     GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold - (int)(Mathf.Pow(specialPerkLevel + 2, 3) * 1000);
                     specialPerkLevel = specialPerkLevel + 1;
+                    if (specialPerkLevel >= 3)
+                    {
+                        GlobalDataScript.globalData.questList[1].UpdateObjective(1);
+                    }
                 }
                 break;
                 
+        }
+        if(fireRateLevel == maxLevel && damageLevel == maxLevel && chargeRateLevel == maxLevel && chargePerShotLevel == maxLevel && specialPerkLevel == maxLevel)
+        {
+            GlobalDataScript.globalData.questList[7].UpdateObjective(1);
         }
         GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
     }

@@ -57,6 +57,7 @@ public class PauseMenuScript : MonoBehaviour
         questText.GetComponent<UnityEngine.UI.Text>().text = currentQuest.description;
         objective1Text.transform.FindChild("Label").GetComponent<UnityEngine.UI.Text>().text = currentQuest.objectiveDescriptions[0];
         objective1Text.GetComponent<UnityEngine.UI.Toggle>().isOn = currentQuest.getObjective(1);
+        //Debug.Log("Objective 1:" + currentQuest.getObjective(1));
         //Debug.Log(objective1Text.GetComponent<UnityEngine.UI.Toggle>().isOn);
         tooltipText.GetComponent<UnityEngine.UI.Text>().text = "Protip: You can fire repeatedly by holding down the mouse button.";
 
@@ -65,13 +66,15 @@ public class PauseMenuScript : MonoBehaviour
             //Debug.Log(currentQuest.getObjective(2));
             objective2Text.SetActive(true);
             objective2Text.GetComponent<UnityEngine.UI.Toggle>().isOn = currentQuest.getObjective(2);
+            Debug.Log("Objective 2:" +currentQuest.getObjective(2));
             objective2Text.transform.FindChild("Label").GetComponent<UnityEngine.UI.Text>().text = currentQuest.objectiveDescriptions[1];
             if (currentQuest.objectiveDescriptions.Length >= 3)
             {
                 //Debug.Log(currentQuest.getObjective(3));
                 objective3Text.SetActive(true);
                 objective3Text.transform.FindChild("Label").GetComponent<UnityEngine.UI.Text>().text = currentQuest.objectiveDescriptions[2];
-                objective2Text.GetComponent<UnityEngine.UI.Toggle>().isOn = currentQuest.getObjective(3);
+                objective3Text.GetComponent<UnityEngine.UI.Toggle>().isOn = currentQuest.getObjective(3);
+                Debug.Log("Objective 3:" +currentQuest.getObjective(3));
             }
             else
             {

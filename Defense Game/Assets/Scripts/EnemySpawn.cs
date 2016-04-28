@@ -89,6 +89,18 @@ public class EnemySpawn : MonoBehaviour
             {
                 GlobalDataScript.globalData.ResetBuffs();
                 GlobalDataScript.globalData.completedLevels[currentLevel - 1] = true;
+                if(currentLevel <= 3)
+                {
+                    GlobalDataScript.globalData.questList[0].UpdateObjective(currentLevel);
+                    if(GlobalDataScript.globalData.hp >= 100)
+                    {
+                        GlobalDataScript.globalData.questList[8].UpdateObjective(currentLevel);
+                    }                    
+                }
+                if (GlobalDataScript.globalData.isHardModeActive)
+                {
+                    GlobalDataScript.globalData.questList[9].UpdateObjective(1);
+                }
                 levelCompleteScreen.SetActive(true);
                 levelCompleteScreen.gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text = "Level Complete!";
                 Time.timeScale = 0;

@@ -228,7 +228,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 {
                     hp = hp - GlobalDataScript.globalData.weaponList[5].specialPerkLevel * 2/3;
                 }
-                CheckDeath();
+                CheckDeath(null);
                 if(poisonCounter >=5)
                 {
                     isPoisoned = false;
@@ -273,7 +273,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 burnStack = burnStack + 1;
             }
             Destroy(other.gameObject);
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "IceProjectile")
         {
@@ -303,7 +303,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             }
             
             //Destroy(other.gameObject);
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "Dark Projectile")
         {
@@ -335,7 +335,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                 }
             }
             
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "Tesla Projectile")
         {
@@ -380,7 +380,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                         Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                         boltInstance.transform.Rotate(targetRotation);
                         boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
-                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
+                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath(other.gameObject);
                         priorEnemy = currentEnemy;
                     }
                 }
@@ -417,13 +417,13 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                         Vector3 targetRotation = boltInstance.transform.rotation.eulerAngles + new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                         boltInstance.transform.Rotate(targetRotation);
                         boltInstance.transform.localScale += new Vector3(direction.magnitude, 0, 0);
-                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath();
+                        priorEnemy.GetComponent<EnemyUpdate>().CheckDeath(other.gameObject);
                         priorEnemy = currentEnemy;
                     }
                 }
             }
             
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "Radiation Projectile")
         {
@@ -468,7 +468,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                     this.gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
                 }
             }
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "RadiationAoE")
         {            
@@ -496,7 +496,7 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             {
                 hp = (int)(hp - GlobalDataScript.globalData.weaponList[5].currentDamage/3 * damageModifier * GlobalDataScript.globalData.damageBonus);
             }
-            CheckDeath();
+            CheckDeath(other.gameObject);
         }
         else if (other.tag == "ChronoWave")
         {
@@ -529,12 +529,28 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
         precisionMultiplier = 1;
     }
 
-    public void CheckDeath()
+    public void CheckDeath(GameObject projectile)
     {
         if (hp <= 0)
         {
+            if(projectile.tag == "RadiationAoE" || projectile.tag == "IceAoE" || projectile.tag == "Dark Projectile" || projectile.tag == "Light Projectile" || projectile.tag == "Tesla Projectile")
+            {
+                projectile.GetComponent<AttackSpriteScript>().killCount += 1;
+                if(projectile.GetComponent<AttackSpriteScript>().killCount == 2)
+                {
+                    GlobalDataScript.globalData.multikillTracker += 1;
+                    if(GlobalDataScript.globalData.multikillTracker == 30)
+                    {
+                        GlobalDataScript.globalData.questList[2].UpdateObjective(1);
+                    }
+                }
+            }
             int gold = Random.Range(minGold, maxGold) * hardModeMultiplier * threatValue;
             GlobalDataScript.globalData.gold = GlobalDataScript.globalData.gold + gold;
+            if(GlobalDataScript.globalData.gold >= 100000)
+            {
+                GlobalDataScript.globalData.questList[5].UpdateObjective(1);
+            }
             GlobalDataScript.globalData.levelGoldTracker = GlobalDataScript.globalData.levelGoldTracker + gold;
             coinPopupInstance = Instantiate(coinPopup, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
             coinPopupInstance.GetComponentInChildren<TextMesh>().text = "+" + gold;
@@ -552,6 +568,15 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
             //{
             //    Instantiate(powerup3, this.transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
             //}
+            if(threatValue >= 6)
+            {
+                GlobalDataScript.globalData.questList[3].UpdateObjective(1);
+            }
+            GlobalDataScript.globalData.killTracker += 1;
+            if(GlobalDataScript.globalData.killTracker == 500)
+            {
+                GlobalDataScript.globalData.questList[4].UpdateObjective(1);
+            }
             Destroy(this.gameObject);
         }
     }

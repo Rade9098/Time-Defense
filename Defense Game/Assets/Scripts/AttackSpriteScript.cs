@@ -6,6 +6,8 @@ public class AttackSpriteScript : MonoBehaviour
     float timer;
     public float decayTime;
     public bool ranged = false;
+    public bool decays;
+    public int killCount = 0;
 	// Use this for initialization
 	void Start () 
     {
@@ -16,7 +18,7 @@ public class AttackSpriteScript : MonoBehaviour
 	void Update () 
     {
         timer = timer + Time.deltaTime;
-        if (timer >= decayTime)
+        if (timer >= decayTime && decays)
         {
             Destroy(this.gameObject);
         }
