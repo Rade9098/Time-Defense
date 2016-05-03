@@ -109,7 +109,7 @@ public class GlobalDataScript : MonoBehaviour
         weaponList.Add(new Weapon("Plasma blast", true, "FireProjectile", .09f, .01f, 5, 2, 10, 1.5f, .5f, .05f, "burn stack", 150f, 45));
         weaponList.Add(new Weapon("Ice shot", true, "IceProjectile", .7f, .05f, 10, 3, 5, 1, 2.5f, .2f, "freeze", 100f));
         weaponList.Add(new Weapon("Light beam", true, "LightProjectile", 3, .3f, 50, 20, 2, 1f, 80, 7, "flood of light", 000f));
-        weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, .02f, 15, 5, 5, 1, 5f, .3f, "pierce", 100f));
+        weaponList.Add(new Weapon("Dark wave", true, "DarkProjectile", .35f, .02f, 15, 5, 5, 1, 5f, .3f, "pierce", 130f, 0));
         weaponList.Add(new Weapon("Tesla bolt", true, "TeslaProjectile", .23f, .012f, 7, 2, 2, .5f, 2.5f, .2f, "chain lightning", 100f));
         weaponList.Add(new Weapon("Radiation slug", true, "RadiationProjectile", .23f, .012f, 5, 2, 7, 1.2f, .5f, .05f, "poison", 70f));
         equippedWeapons = new List<Weapon>(weaponList);
@@ -149,48 +149,54 @@ public class GlobalDataScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("HP Added.");
-            globalData.hp = globalData.hp + 10;
-            if (GameObject.FindGameObjectWithTag("HPCount") != null)
-            {
-                GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
-            }
-            if (globalData.hp > 100+globalData.hpBonus)
-            {
-                globalData.hp = 100 + hpBonus;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log("Free gold given.");            
-            globalData.gold = globalData.gold + 100000000;
-            if (GameObject.FindGameObjectWithTag("GoldCount") != null)
-            {
-                GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Debug.Log("Tutorial skipped.");
-            globalData.tutorialState = 3;
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if(isHardModeActive)
-            {
-                Debug.Log("Hard mode deactivated.");
-            }
-            else
-            {
-                Debug.Log("Hard mode activated.");
-            }
-            isHardModeActive = !isHardModeActive;
-        }
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Debug.Log("HP Added.");
+        //    globalData.hp = globalData.hp + 10;
+        //    if (GameObject.FindGameObjectWithTag("HPCount") != null)
+        //    {
+        //        GameObject.FindGameObjectWithTag("HPCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.hp.ToString();
+        //    }
+        //    if (globalData.hp > 100+globalData.hpBonus)
+        //    {
+        //        globalData.hp = 100 + hpBonus;
+        //    }
+        //}
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    Debug.Log("Free gold given.");            
+        //    globalData.gold = globalData.gold + 100000000;
+        //    if (GameObject.FindGameObjectWithTag("GoldCount") != null)
+        //    {
+        //        GameObject.FindGameObjectWithTag("GoldCount").GetComponent<UnityEngine.UI.Text>().text = GlobalDataScript.globalData.gold.ToString();
+        //    }
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    Debug.Log("Tutorial skipped.");
+        //    globalData.tutorialState = 3;
+        //}
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+        //    if(isHardModeActive)
+        //    {
+        //        Debug.Log("Hard mode deactivated.");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("Hard mode activated.");
+        //    }
+        //    isHardModeActive = !isHardModeActive;
+        //}
         //Debug.Log(questList[0].name);
         //Debug.Log(questList);
     }
+
+    public void ToggleHardMode(bool toggle)
+    {
+        globalData.isHardModeActive = toggle;
+    }
+
     public void Save()
     {
         BinaryFormatter bf = new BinaryFormatter();

@@ -137,7 +137,8 @@ public class EnemyUpdate : MonoBehaviour, ICustomMessageTarget {
                        levelCompleteScreen.SetActive(true);
                        levelCompleteScreen.gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text = "GAME OVER";
                        Time.timeScale = 0;
-                       //Application.LoadLevel("Overworld Map");
+                        GlobalDataScript.globalData.ToggleHardMode(false);
+                        //Application.LoadLevel("Overworld Map");
                     }
                     random = Random.Range(0, 100);
                     if (attackDistance >= 1.6f && random <= GlobalDataScript.globalData.spikeAbilityLevel)

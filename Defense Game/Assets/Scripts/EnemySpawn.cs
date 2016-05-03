@@ -83,28 +83,31 @@ public class EnemySpawn : MonoBehaviour
         if (GlobalDataScript.globalData.tutorialState == 3)
         {
             levelTimer = levelTimer + Time.deltaTime;
-
-            levelTimerRender.fillAmount = 1-(levelTimer / 112f); //(-initialTimerWidth + (initialTimerWidth*(112f-levelTimer))/112f);
-            if (levelTimer >= 112)
+            if (currentLevel <= 10)
             {
-                GlobalDataScript.globalData.ResetBuffs();
-                GlobalDataScript.globalData.completedLevels[currentLevel - 1] = true;
-                if(currentLevel <= 3)
+                levelTimerRender.fillAmount = 1 - (levelTimer / 112f); //(-initialTimerWidth + (initialTimerWidth*(112f-levelTimer))/112f);
+                if (levelTimer >= 112)
                 {
-                    GlobalDataScript.globalData.questList[0].UpdateObjective(currentLevel);
-                    if(GlobalDataScript.globalData.hp >= 100)
+                    GlobalDataScript.globalData.ResetBuffs();
+                    GlobalDataScript.globalData.completedLevels[currentLevel - 1] = true;
+                    if (currentLevel <= 3)
                     {
-                        GlobalDataScript.globalData.questList[8].UpdateObjective(currentLevel);
-                    }                    
+                        GlobalDataScript.globalData.questList[0].UpdateObjective(currentLevel);
+                        if (GlobalDataScript.globalData.hp >= 100)
+                        {
+                            GlobalDataScript.globalData.questList[8].UpdateObjective(currentLevel);
+                        }
+                    }
+                    if (GlobalDataScript.globalData.isHardModeActive)
+                    {
+                        GlobalDataScript.globalData.questList[9].UpdateObjective(1);
+                    }
+                    levelCompleteScreen.SetActive(true);
+                    levelCompleteScreen.gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text = "Level Complete!";
+                    GlobalDataScript.globalData.ToggleHardMode(false);
+                    Time.timeScale = 0;
+                    //Application.LoadLevel("Overworld Map");
                 }
-                if (GlobalDataScript.globalData.isHardModeActive)
-                {
-                    GlobalDataScript.globalData.questList[9].UpdateObjective(1);
-                }
-                levelCompleteScreen.SetActive(true);
-                levelCompleteScreen.gameObject.GetComponentInChildren<UnityEngine.UI.Text>().text = "Level Complete!";
-                Time.timeScale = 0;
-                //Application.LoadLevel("Overworld Map");
             }
             waveTimer = waveTimer + Time.deltaTime;
             spawnTimer = spawnTimer + Time.deltaTime;

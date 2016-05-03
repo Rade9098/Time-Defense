@@ -1,11 +1,14 @@
 fileFormatVersion: 2
 guid: a8c298a3bc330ae4282b6d06939f44bf
-timeCreated: 1450192311
+timeCreated: 1462194465
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: erodaxia summary_0_0
     21300002: erodaxia summary_0_1
+    21300004: erodaxia summary_0_2
+    21300006: erodaxia summary_0_3
+    21300008: erodaxia summary_0_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -69,6 +72,36 @@ TextureImporter:
         y: 96
         width: 53
         height: 294
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: erodaxia summary_0_2
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 96
+        width: 120
+        height: 64
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: erodaxia summary_0_3
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 196
+        width: 60
+        height: 60
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: erodaxia summary_0_4
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 265
+        width: 120
+        height: 38
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
